@@ -1,0 +1,120 @@
+@import "tailwindcss";
+/* ——— Anatomy kit CSS (kit/iso.css) — the drawing's own stylesheet ——— */
+@import "./iso/iso.css";
+
+/* ——— The sheet: page shell on a vellum grid ——— */
+.sheet {
+  background: var(--anatomy-page);
+  color: var(--anatomy-text);
+  min-height: 100vh;
+  background-image:
+    linear-gradient(var(--anatomy-faint) 1px, transparent 1px),
+    linear-gradient(90deg, var(--anatomy-faint) 1px, transparent 1px),
+    linear-gradient(color-mix(in srgb, var(--anatomy-lo) 62%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--anatomy-lo) 62%, transparent) 1px, transparent 1px);
+  background-size: 24px 24px, 24px 24px, 120px 120px, 120px 120px;
+}
+
+.sheet-eyebrow {
+  color: var(--anatomy-muted);
+  font-family: var(--anatomy-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.sheet-rule {
+  height: 1px;
+  background: var(--anatomy-mid);
+  border: 0;
+}
+
+.sheet-lede {
+  color: var(--anatomy-text);
+  max-width: 62ch;
+}
+
+/* Small controls and chips, same hand as the figures */
+.sheet-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--anatomy-mid);
+  background: color-mix(in srgb, var(--anatomy-card) 80%, transparent);
+  color: var(--anatomy-strong);
+  font-family: var(--anatomy-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 7px 12px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: border-color 160ms var(--anatomy-ease), color 160ms var(--anatomy-ease),
+    background-color 160ms var(--anatomy-ease);
+}
+.sheet-btn:hover {
+  border-color: var(--anatomy-hi);
+}
+.sheet-btn:active {
+  transform: translateY(0.5px);
+}
+.sheet-btn[data-mode="chip"] {
+  padding: 6px 9px;
+  color: var(--anatomy-muted);
+  border-color: var(--anatomy-faint);
+  background: transparent;
+}
+.sheet-btn[data-mode="chip"]:hover {
+  color: var(--anatomy-text);
+  border-color: var(--anatomy-mid);
+}
+.sheet-btn[aria-pressed="true"] {
+  border-color: var(--anatomy-hi);
+  color: var(--anatomy-strong);
+}
+.sheet-btn[data-role="primary"] {
+  border-color: var(--anatomy-hi);
+}
+
+.sheet-log {
+  font-family: var(--anatomy-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--anatomy-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.sheet :focus-visible {
+  outline: 1px solid var(--anatomy-hi);
+  outline-offset: 5px;
+}
+
+/* The figure's own svg fills most of the plate without outgrowing it */
+.fig-creation {
+  width: min(100%, 760px);
+  margin-inline: auto;
+}
+.fig-edge {
+  width: min(100%, 780px);
+  margin-inline: auto;
+}
+.fig-creation .iso-svg,
+.fig-edge .iso-svg {
+  margin: 0 auto;
+}
+
+.iso-led {
+  stroke: none;
+}
+.iso-led[data-state="idle"] {
+  opacity: 0.3;
+}
+.iso-led[data-state="live"] {
+  opacity: 1;
+}
+
+@media (max-width: 560px) {
+  .sheet-lede {
+    font-size: 13px;
+  }
+}

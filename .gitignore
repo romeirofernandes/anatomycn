@@ -1,0 +1,15 @@
+# deps / build
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# os / editor junk
+.DS_Store
+
+# skills are pinned in skills-lock.json, never vendored into git
+# (restore with: npx skills experimental_install)
+.agents/
+
+# personal learning workspace, kept out of this project
+learn-nvim/
