@@ -18,7 +18,7 @@ import {
   type Plan,
   type Plane,
   type Point3,
-} from "../../iso/iso-kit";
+} from "@/components/anatomy/iso-kit";
 import * as V from "./view";
 
 const solid = (plan: Plan, z: number, h: number, steps = 6, bevel = 0) =>

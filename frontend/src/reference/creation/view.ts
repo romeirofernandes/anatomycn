@@ -1,7 +1,7 @@
 // Fig 1 — Creation study. The world: a draughtsman's light table in world units
 // (≈ px, x right, y depth, z up), with a gantry gap-jig over the vellum.
 // One model drives everything: the gap in mm, at MM world units per millimetre.
-import { iso, type Flat, type Plan, type Point3, type Projection } from "../../iso/iso-kit";
+import { iso, type Flat, type Plan, type Point3, type Projection } from "@/components/anatomy/iso-kit";
 
 export const WIDTH = 620;
 export const HEIGHT = 380;

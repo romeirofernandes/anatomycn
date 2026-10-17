@@ -5,14 +5,26 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && npm run registry:build && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "registry:build": "shadcn build"
   },
   "dependencies": {
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource-variable/geist-pixel": "^5.3.1",
+    "@hugeicons/core-free-icons": "^4.3.5",
+    "@hugeicons/react": "^1.1.10",
+    "@shikijs/langs": "^4.5.0",
+    "@shikijs/themes": "^4.5.0",
     "@tailwindcss/vite": "^4.3.3",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.58.0",
+    "motion": "^14.3.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
+    "shiki": "^4.5.0",
+    "tailwind-merge": "^3.7.0",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
@@ -21,6 +33,7 @@
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
     "oxlint": "^1.81.0",
+    "shadcn": "^4.22.0",
     "typescript": "~6.0.2",
     "vite": "^8.3.0"
   }

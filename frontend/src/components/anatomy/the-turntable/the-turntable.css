@@ -1,0 +1,124 @@
+/* The Turntable — the framed plate the figure sits in, plus its play/pause
+   control. The only chrome the figure needs; the drawing is styled by iso.css. */
+
+.the-turntable {
+  --the-turntable-pad: clamp(16px, 4.5vw, 34px);
+}
+
+.the-turntable-plate {
+  position: relative;
+  background: var(--anatomy-card);
+  /* the figure's solids are filled with --anatomy-paper, which has to match
+     the surface they are drawn on or every body shows a lighter rectangle */
+  --anatomy-paper: var(--anatomy-card);
+  box-shadow: 0 0 0 1px var(--anatomy-mid);
+  padding: var(--the-turntable-pad);
+}
+
+.the-turntable-stage {
+  outline: none;
+}
+
+/* the pointer is only a handle while the tour is stopped: it takes the arm */
+.the-turntable-stage[data-interactive] {
+  cursor: grab;
+}
+
+.the-turntable-stage[data-interactive]:active {
+  cursor: grabbing;
+}
+
+/* the corner the deck leaves clear: it runs as a diamond, so the top right of
+   the frame is empty at every width */
+.the-turntable-control {
+  position: absolute;
+  top: calc(var(--the-turntable-pad) - 8px);
+  right: calc(var(--the-turntable-pad) - 8px);
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--anatomy-mid);
+  border-radius: 999px;
+  background: var(--anatomy-card);
+  color: var(--anatomy-hi);
+  cursor: pointer;
+  transition:
+    border-color 160ms var(--anatomy-ease),
+    color 160ms var(--anatomy-ease),
+    transform 160ms var(--anatomy-ease);
+}
+
+.the-turntable-control:hover {
+  border-color: var(--anatomy-hi);
+  color: var(--anatomy-strong);
+}
+
+.the-turntable-control:active {
+  transform: translateY(0.5px);
+}
+
+.the-turntable-control svg {
+  display: block;
+}
+
+/* the two glyphs trade places with a short blur, no motion library needed */
+.the-turntable-swap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+}
+
+.the-turntable-glyph {
+  grid-area: 1 / 1;
+  opacity: 0;
+  filter: blur(3px);
+  transform: scale(0.72);
+  transition:
+    opacity 180ms var(--anatomy-ease),
+    filter 180ms var(--anatomy-ease),
+    transform 180ms var(--anatomy-ease);
+}
+
+.the-turntable-glyph[data-on] {
+  opacity: 1;
+  filter: blur(0);
+  transform: scale(1);
+}
+
+/* the cartridge is a different material from the arm it hangs under */
+.the-turntable-cartridge > .iso-fill {
+  fill: var(--anatomy-shade-1);
+}
+
+.the-turntable-cartridge > .iso-shade {
+  fill: var(--anatomy-shade-0);
+}
+
+.the-turntable-cartridge > .iso-top {
+  fill: var(--anatomy-shade-2);
+}
+
+/* the block of type on the label, the only heavy stroke in the drawing */
+.the-turntable-type {
+  stroke-width: 1.7px;
+}
+
+.the-turntable-led {
+  transition: none;
+}
+
+.the-turntable :focus-visible {
+  outline: 1px solid var(--anatomy-hi);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .the-turntable-control,
+  .the-turntable-glyph {
+    transition: none;
+  }
+}

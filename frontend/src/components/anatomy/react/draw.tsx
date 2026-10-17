@@ -1,6 +1,8 @@
 import * as React from "react";
-import { pathOf, type Flat, type KeyMark, type LegendKey, type LineTone, type SolidPaths, type Tone } from "../iso-kit";
-import { Stage } from "./live";
+/* the kit brings its own stylesheet, so a copied file set works as installed */
+import "../iso.css";
+import { pathOf, type Flat, type KeyMark, type LegendKey, type LineTone, type SolidPaths, type Tone } from "@/components/anatomy/iso-kit";
+import { Stage } from "@/components/anatomy/react/live";
 
 interface SolidProps {
   paths: SolidPaths;

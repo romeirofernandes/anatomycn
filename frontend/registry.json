@@ -1,0 +1,150 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "anatomy",
+  "homepage": "https://anatomy.dev",
+  "items": [
+    {
+      "name": "anatomy-kit",
+      "type": "registry:lib",
+      "title": "Anatomy Kit",
+      "description": "The primitives behind the drawings: an isometric projection with depth-sorted extrusion, four-tone shading, and the React draw/live components used to build a figure. Install this once, then any figure on top of it.",
+      "files": [
+        {
+          "path": "src/components/anatomy/iso-kit.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/iso-kit.ts"
+        },
+        {
+          "path": "src/components/anatomy/iso.css",
+          "type": "registry:file",
+          "target": "@components/anatomy/iso.css"
+        },
+        {
+          "path": "src/components/anatomy/react/draw.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/react/draw.tsx"
+        },
+        {
+          "path": "src/components/anatomy/react/live.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/react/live.tsx"
+        },
+        {
+          "path": "src/components/anatomy/live-solid.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/live-solid.tsx"
+        },
+        {
+          "path": "src/components/anatomy/axis-parts.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/axis-parts.ts"
+        }
+      ]
+    },
+    {
+      "name": "the-zip",
+      "type": "registry:block",
+      "title": "The Zip",
+      "description": "An isometric zip in SVG. Two tapes bow apart past the slider and their teeth mesh behind it; one number drives the tapes, every tooth and the slider body. It runs its own idle tour with a play/pause control, and once paused you can drag the slider or drive it with the arrow keys.",
+      "categories": ["svg", "isometric", "interactive"],
+      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "files": [
+        {
+          "path": "src/components/anatomy/the-zip/the-zip.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/the-zip/the-zip.tsx"
+        },
+        {
+          "path": "src/components/anatomy/the-zip/zip.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/the-zip/zip.ts"
+        },
+        {
+          "path": "src/components/anatomy/the-zip/the-zip.css",
+          "type": "registry:file",
+          "target": "@components/anatomy/the-zip/the-zip.css"
+        },
+        {
+          "path": "src/components/anatomy/iso-kit.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/iso-kit.ts"
+        },
+        {
+          "path": "src/components/anatomy/iso.css",
+          "type": "registry:file",
+          "target": "@components/anatomy/iso.css"
+        },
+        {
+          "path": "src/components/anatomy/react/draw.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/react/draw.tsx"
+        },
+        {
+          "path": "src/components/anatomy/react/live.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/react/live.tsx"
+        },
+        {
+          "path": "src/components/anatomy/live-solid.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/live-solid.tsx"
+        }
+      ]
+    },
+    {
+      "name": "the-turntable",
+      "type": "registry:block",
+      "title": "The Turntable",
+      "description": "An isometric turntable in SVG. The platter spins while the tonearm lifts off its rest, swings in, sets the stylus on the record and creeps toward the label; one clock drives the platter, the arm's bearing and its cue height. It runs its own tour with a play/pause control, and once paused you can drag the arm to any groove or drive it with the arrow keys.",
+      "categories": ["svg", "isometric", "interactive"],
+      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "files": [
+        {
+          "path": "src/components/anatomy/the-turntable/the-turntable.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/the-turntable/the-turntable.tsx"
+        },
+        {
+          "path": "src/components/anatomy/the-turntable/turntable.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/the-turntable/turntable.ts"
+        },
+        {
+          "path": "src/components/anatomy/the-turntable/the-turntable.css",
+          "type": "registry:file",
+          "target": "@components/anatomy/the-turntable/the-turntable.css"
+        },
+        {
+          "path": "src/components/anatomy/iso-kit.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/iso-kit.ts"
+        },
+        {
+          "path": "src/components/anatomy/axis-parts.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/axis-parts.ts"
+        },
+        {
+          "path": "src/components/anatomy/iso.css",
+          "type": "registry:file",
+          "target": "@components/anatomy/iso.css"
+        },
+        {
+          "path": "src/components/anatomy/react/draw.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/react/draw.tsx"
+        },
+        {
+          "path": "src/components/anatomy/react/live.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/react/live.tsx"
+        },
+        {
+          "path": "src/components/anatomy/live-solid.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/live-solid.tsx"
+        }
+      ]
+    }
+  ]
+}

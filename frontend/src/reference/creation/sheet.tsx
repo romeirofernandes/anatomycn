@@ -1,7 +1,7 @@
 // Fig 1 — the study on the vellum. All coordinates are sheet-local (0…200 × 0…120)
 // and drawn through the sheet's top matrix, so the ink lies in the paper's plane.
 import type { ReactNode } from "react";
-import { topMatrix } from "../../iso/iso-kit";
+import { topMatrix } from "@/components/anatomy/iso-kit";
 import * as V from "./view";
 
 export const SHEET_MATRIX = topMatrix(V.SHEET_AT, V.SHEET_TOP, V.P, "x");

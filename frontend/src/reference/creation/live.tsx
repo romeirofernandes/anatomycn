@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Dots, FaceText, IsoFigure, Line, Solid, Wire } from "../../iso/react/draw";
-import { asksForStillness, useInView, useReadout } from "../../iso/react/live";
-import { ring } from "../../iso/iso-kit";
+import { Dots, FaceText, IsoFigure, Line, Solid, Wire } from "@/components/anatomy/react/draw";
+import { asksForStillness, useInView, useReadout } from "@/components/anatomy/react/live";
+import { ring } from "@/components/anatomy/iso-kit";
 import { FLOOR, FRAME, GANTRY, LAMP, LIGHTBOX, LINES, PROPS, SHEET_KIT, SHOE, TABLE } from "./geometry";
 import { LEFT_HAND, RIGHT_HAND, SHEET_MATRIX, STUDY } from "./sheet";
 import { halfOf, readoutOf, sparkOf, spokenOf, tourAt } from "./study";

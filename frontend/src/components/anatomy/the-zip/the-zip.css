@@ -1,0 +1,94 @@
+/* The Zip — the framed plate the figure sits in, plus its play/pause control.
+   The only chrome the figure needs; the drawing itself is styled by iso.css. */
+
+.the-zip {
+  --the-zip-pad: clamp(16px, 5vw, 36px);
+}
+
+.the-zip-plate {
+  position: relative;
+  background: var(--anatomy-card);
+  /* the figure's solids are filled with --anatomy-paper, which has to match
+     the surface they are drawn on or every body shows a lighter rectangle */
+  --anatomy-paper: var(--anatomy-card);
+  box-shadow: 0 0 0 1px var(--anatomy-mid);
+  padding: var(--the-zip-pad);
+}
+
+.the-zip-stage {
+  outline: none;
+}
+
+/* the pointer is only a handle while the tour is stopped */
+.the-zip-stage[data-interactive] {
+  cursor: ew-resize;
+}
+
+/* the corner the drawing never reaches: the zip runs upper left to lower
+   right, so the control lives top right and stays clear at every width */
+.the-zip-control {
+  position: absolute;
+  top: calc(var(--the-zip-pad) - 8px);
+  right: calc(var(--the-zip-pad) - 8px);
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--anatomy-mid);
+  border-radius: 999px;
+  background: var(--anatomy-card);
+  color: var(--anatomy-hi);
+  cursor: pointer;
+  transition: border-color 160ms var(--anatomy-ease), color 160ms var(--anatomy-ease),
+    transform 160ms var(--anatomy-ease);
+}
+
+.the-zip-control:hover {
+  border-color: var(--anatomy-hi);
+  color: var(--anatomy-strong);
+}
+
+.the-zip-control:active {
+  transform: translateY(0.5px);
+}
+
+.the-zip-control svg {
+  display: block;
+}
+
+/* the two glyphs trade places with a short blur, no motion library needed */
+.the-zip-swap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+}
+
+.the-zip-glyph {
+  grid-area: 1 / 1;
+  opacity: 0;
+  filter: blur(3px);
+  transform: scale(0.72);
+  transition: opacity 180ms var(--anatomy-ease), filter 180ms var(--anatomy-ease),
+    transform 180ms var(--anatomy-ease);
+}
+
+.the-zip-glyph[data-on] {
+  opacity: 1;
+  filter: blur(0);
+  transform: scale(1);
+}
+
+.the-zip :focus-visible {
+  outline: 1px solid var(--anatomy-hi);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .the-zip-control,
+  .the-zip-glyph {
+    transition: none;
+  }
+}

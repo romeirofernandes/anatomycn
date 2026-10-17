@@ -1,18 +1,110 @@
 @import "tailwindcss";
-/* ——— Anatomy kit CSS (kit/iso.css) — the drawing's own stylesheet ——— */
-@import "./iso/iso.css";
+/* ——— Anatomy kit tokens and drawing styles live in the kit's own stylesheet,
+       src/components/anatomy/iso.css, which arrives with the figure ——— */
 
-/* ——— The sheet: page shell on a vellum grid ——— */
+/* Vendored beUI files use Tailwind's `dark:`. Point it at the sheet's own
+   theme attribute so the drawing and the components flip together, instead of
+   following the operating system. */
+@custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
+
+/* ——— Type: Geist for everything, Geist Pixel for the masthead ——— */
+@theme {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+  --font-pixel: "Geist Pixel Variable", var(--font-sans);
+}
+
+/* Geist Pixel ships five shapes on one axis (ELSH 0–100). Keep square as the
+   default and switch shape with one of these classes. */
+.font-pixel {
+  font-variation-settings: "ELSH" 0;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+.pixel-square {
+  font-variation-settings: "ELSH" 0;
+}
+.pixel-grid {
+  font-variation-settings: "ELSH" 25;
+}
+.pixel-circle {
+  font-variation-settings: "ELSH" 50;
+}
+.pixel-triangle {
+  font-variation-settings: "ELSH" 75;
+}
+.pixel-line {
+  font-variation-settings: "ELSH" 100;
+}
+
+/*
+  beUI components (the install section) speak shadcn's token names. `inline`
+  makes Tailwind write the anatomy variable straight into the utility, so one
+  set of classes follows the theme instead of freezing at load.
+*/
+@theme inline {
+  --color-background: var(--anatomy-page);
+  --color-foreground: var(--anatomy-strong);
+  --color-card: var(--anatomy-card);
+  --color-card-foreground: var(--anatomy-strong);
+  --color-popover: var(--anatomy-card);
+  --color-popover-foreground: var(--anatomy-strong);
+  --color-primary: var(--anatomy-strong);
+  --color-primary-foreground: var(--anatomy-page);
+  --color-secondary: var(--anatomy-faint);
+  --color-secondary-foreground: var(--anatomy-strong);
+  --color-muted: var(--anatomy-faint);
+  --color-muted-foreground: var(--anatomy-muted);
+  --color-accent: var(--anatomy-faint);
+  --color-accent-foreground: var(--anatomy-strong);
+  --color-destructive: var(--anatomy-red);
+  --color-destructive-foreground: var(--anatomy-page);
+  --color-border: var(--anatomy-lo);
+  --color-input: var(--anatomy-lo);
+  --color-ring: var(--anatomy-hi);
+}
+
+/* ——— The sheet: page background and its margin hatching ——— */
 .sheet {
+  position: relative;
+  min-height: 100vh;
   background: var(--anatomy-page);
   color: var(--anatomy-text);
-  min-height: 100vh;
-  background-image:
-    linear-gradient(var(--anatomy-faint) 1px, transparent 1px),
-    linear-gradient(90deg, var(--anatomy-faint) 1px, transparent 1px),
-    linear-gradient(color-mix(in srgb, var(--anatomy-lo) 62%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in srgb, var(--anatomy-lo) 62%, transparent) 1px, transparent 1px);
-  background-size: 24px 24px, 24px 24px, 120px 120px, 120px 120px;
+  /* the drawing column: matches max-w-3xl on the body */
+  --column: 48rem;
+  --hatch-pitch: 16px;
+}
+
+/*
+  Hatching fills the margins at 45 degrees. The column covers it, opaque, and
+  carries the two trim lines that bound the 3xl.
+*/
+.sheet-rules {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--anatomy-faint) 0 0.5px,
+    transparent 0.5px var(--hatch-pitch)
+  );
+}
+
+.sheet-rules-col {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  translate: -50% 0;
+  width: min(100%, var(--column));
+  background-color: var(--anatomy-page);
+  box-shadow: inset 1px 0 0 var(--anatomy-lo), inset -1px 0 0 var(--anatomy-lo);
+}
+
+.sheet-body {
+  position: relative;
+  z-index: 1;
 }
 
 .sheet-eyebrow {
@@ -31,7 +123,7 @@
 
 .sheet-lede {
   color: var(--anatomy-text);
-  max-width: 62ch;
+  max-width: 58ch;
 }
 
 /* Small controls and chips, same hand as the figures */
@@ -89,20 +181,72 @@
   outline-offset: 5px;
 }
 
-/* The figure's own svg fills most of the plate without outgrowing it */
-.fig-creation {
-  width: min(100%, 760px);
-  margin-inline: auto;
+/* ——— The theme toggle: half discs trade places, the ring turns ——— */
+.theme-toggle {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: #000;
+  cursor: pointer;
+  transition: transform 160ms var(--anatomy-ease);
 }
-.fig-edge {
-  width: min(100%, 780px);
-  margin-inline: auto;
+.theme-toggle:hover {
+  transform: scale(1.06);
 }
-.fig-creation .iso-svg,
-.fig-edge .iso-svg {
-  margin: 0 auto;
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+.theme-toggle svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.theme-toggle-disc,
+.theme-toggle-ring {
+  transform-origin: 120px 120px;
+  transition: transform 350ms ease-in-out;
 }
 
+/* ——— Theme wipe: a rectangle rising from the bottom, blurred ——— */
+:root {
+  --expo-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --wipe-duration: 620ms;
+}
+
+::view-transition-group(root) {
+  animation-duration: var(--wipe-duration);
+  animation-timing-function: var(--expo-out);
+}
+
+::view-transition-old(root) {
+  animation: none;
+  z-index: -1;
+}
+
+::view-transition-new(root) {
+  animation-name: reveal-from-bottom;
+}
+
+@keyframes reveal-from-bottom {
+  from {
+    clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);
+    filter: blur(8px);
+  }
+  50% {
+    filter: blur(4px);
+  }
+  to {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+    filter: blur(0px);
+  }
+}
+
+/* ——— figure states shared by the drawings ——— */
 .iso-led {
   stroke: none;
 }
@@ -117,4 +261,23 @@
   .sheet-lede {
     font-size: 13px;
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+  .theme-toggle,
+  .theme-toggle-disc,
+  .theme-toggle-ring {
+    transition: none;
+  }
+}
+
+/* ——— the install block (vendored beUI code block) ———
+   its <pre> pins min-width to max-content, which defeats the wrap prop; the
+   sheet wants the command to wrap in the column rather than scroll sideways */
+.install-code pre {
+  min-width: 0;
 }
