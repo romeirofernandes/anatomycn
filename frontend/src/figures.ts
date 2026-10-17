@@ -37,7 +37,7 @@ export const FIGURES: FigureEntry[] = [
     name: "The Zip",
     tagline: "A slider you drag, with teeth that meet behind it.",
     summary:
-      "A zip is one number made visible. The slider, both tapes, every tooth and the mesh behind the pull are rebuilt from a single value, so the figure reads as a mechanism instead of a picture of one. Point that number at anything on the page and the zip opens with it.",
+      "A zip is one number made visible. The slider, both tapes, every tooth and the mesh behind the pull are rebuilt from a single value, so the figure reads as a mechanism instead of a picture of one. Pause it and the slider is yours to drag. Point that number at anything on the page and the zip opens with it.",
     uses: [
       "A settings panel that opens as options are switched on",
       "An empty state that asks for a pull to reveal what is underneath",

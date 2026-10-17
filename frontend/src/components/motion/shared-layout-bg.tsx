@@ -64,6 +64,11 @@ export const SharedLayoutBg = forwardRef<HTMLElement, SharedLayoutBgProps>(
     forwardedRef,
   ) {
   const [activeId, setActiveId] = useState<string | null>(null);
+  // local: a tap synthesizes mouseenter on touch, which would leave the pill
+  // stuck on the last row tapped, on top of the selected state it duplicates
+  const [canHover] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches,
+  );
   const uid = useId();
   const reduce = useReducedMotion();
 
@@ -83,6 +88,7 @@ export const SharedLayoutBg = forwardRef<HTMLElement, SharedLayoutBgProps>(
             className: cn("relative", el.props.className),
             onMouseEnter: () => {
               el.props.onMouseEnter?.();
+              if (!canHover) return;
               setActiveId(childKey);
             },
           },

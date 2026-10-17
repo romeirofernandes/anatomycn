@@ -17,7 +17,7 @@ export function FigurePage({ entry, theme }: { entry: FigureEntry; theme: Theme 
       </div>
 
       <h1
-        className="font-pixel pixel-square mb-0 mt-6 text-2xl leading-none sm:text-3xl"
+        className="font-pixel pixel-square mb-0 mt-6 text-balance text-2xl leading-tight sm:text-3xl"
         style={{ color: "var(--anatomy-strong)" }}
       >
         {entry.name}
@@ -30,7 +30,7 @@ export function FigurePage({ entry, theme }: { entry: FigureEntry; theme: Theme 
 
       <section className="py-10 sm:py-14">
         <h2
-          className="font-pixel pixel-square m-0 text-xl leading-none"
+          className="font-pixel pixel-square m-0 text-balance text-xl leading-tight"
           style={{ color: "var(--anatomy-strong)" }}
         >
           What it is for

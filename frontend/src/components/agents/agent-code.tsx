@@ -79,7 +79,15 @@ function getAgentCodeHighlighter() {
         import("@shikijs/themes/github-dark-high-contrast"),
       ]);
       return createHighlighterCore({
-        themes: [githubLightHighContrast, githubDarkHighContrast],
+        themes: [
+          // local: the light theme's comment grey lands at 4.2:1 on the code
+          // surface, where the dark theme's is 8.8:1. Nudge only the light one.
+          {
+            ...githubLightHighContrast,
+            colorReplacements: { "#66707b": "#5b6470" },
+          },
+          githubDarkHighContrast,
+        ],
         langs: [],
         engine: createJavaScriptRegexEngine(),
       });

@@ -29,9 +29,14 @@ field to the viewport. It is a WebGL2 port of
 typed and trimmed to what the sheet uses, and it is site chrome: no figure
 depends on it.
 
-Cards run their figure live with the art marked `inert`, so the only thing in
-the tab order is the link to the figure's page. A figure stops itself when it
-leaves the viewport, which keeps a grid of them cheap.
+Cards run their figure live and keep its play/pause control: a figure that
+starts on its own has to be stoppable, so the control stays a real button and
+the card's link is the title, stretched over the card with an `::after` rather
+than wrapped around the art. A figure also stops itself when it leaves the
+viewport, which keeps a grid of them cheap.
+
+A route change moves focus to `<main>`, and a skip link ahead of the masthead is
+the first thing in the tab order.
 
 The catalogue in `src/figures.ts` is the one place a figure is described: slug,
 name, tagline, what it is for, the paths its registry item writes, and the
@@ -98,8 +103,8 @@ The install sheet reads the command's host from `window.location.origin`, and it
 from it. So the sheet documents the exact payload `shadcn build` produced rather
 than a copy of the source that could drift.
 
-`homepage` in `registry.json` is a placeholder (`https://anatomycn.dev`) and the
-CLI requires it, so set it to where the sheet is served before publishing.
+`homepage` in `registry.json` points at `https://anatomycn.vercel.app`, and the
+CLI requires the field, so change it if the sheet moves.
 
 The item is self-contained: it carries the kit, the stylesheet and the figure,
 so the files land as working components with nothing else to wire up. The only

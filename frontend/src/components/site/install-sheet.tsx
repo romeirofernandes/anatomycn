@@ -94,6 +94,17 @@ function languageOf(name: string): AgentCodeLanguage {
   return "text";
 }
 
+/* one sheet renders per page, so the ids only have to line up with each other */
+const tabId = (mode: Mode) => `install-tab-${mode}`;
+
+/*
+  The tab list swaps one region rather than holding one panel per manager: the
+  manual panel fetches and highlights every file in the item, so mounting all
+  five would be wasteful. `aria-controls` therefore names the region that always
+  exists, and the region takes its label from whichever tab is selected.
+*/
+const PANEL_ID = "install-panel";
+
 export function InstallSheet({ entry }: { entry: FigureEntry }) {
   const [origin] = React.useState(() =>
     typeof window === "undefined" ? "" : window.location.origin,
@@ -140,7 +151,7 @@ export function InstallSheet({ entry }: { entry: FigureEntry }) {
   return (
     <section className="py-10 sm:py-14">
       <h2
-        className="font-pixel pixel-square m-0 text-xl leading-none"
+        className="font-pixel pixel-square m-0 text-balance text-xl leading-tight"
         style={{ color: "var(--anatomy-strong)" }}
       >
         Install
@@ -148,23 +159,36 @@ export function InstallSheet({ entry }: { entry: FigureEntry }) {
       <p className="sheet-lede mt-3 text-sm">
         {entry.name} ships as its own shadcn item. One command writes the component,
         the kit it draws with and the stylesheet, so what lands is yours to edit.
-        Nothing is fetched at runtime and no class names arrive from here.
+        Nothing is fetched at runtime, and none of it depends on this site&rsquo;s
+        styles.
       </p>
 
       <div className="install mt-7">
         <Tabs value={mode} onValueChange={(next) => setMode(next as Mode)} variant="segment">
-          <TabsList>
+          <TabsList aria-label={`Install ${entry.name}`}>
             {MANAGERS.map((row) => (
-              <TabsTrigger key={row.id} value={row.id}>
+              <TabsTrigger
+                key={row.id}
+                value={row.id}
+                id={tabId(row.id)}
+                aria-controls={PANEL_ID}
+              >
                 {row.label}
               </TabsTrigger>
             ))}
-            <TabsTrigger value="manual">manual</TabsTrigger>
+            <TabsTrigger value="manual" id={tabId("manual")} aria-controls={PANEL_ID}>
+              manual
+            </TabsTrigger>
           </TabsList>
         </Tabs>
 
         {mode === "manual" ? (
-          <div className="mt-5">
+          <div
+            className="mt-5"
+            role="tabpanel"
+            id={PANEL_ID}
+            aria-labelledby={tabId("manual")}
+          >
             <p className="sheet-lede mb-5 text-sm">
               Or take the files. Each one below is exactly what the command writes,
               at the same path under your <code>@/</code> root, so a copy and paste
@@ -186,24 +210,28 @@ export function InstallSheet({ entry }: { entry: FigureEntry }) {
 
               <div className="min-w-0">
                 {file ? (
-                  <CodeBlock
-                    code={file.content ?? ""}
-                    language={languageOf(file.target ?? file.path)}
-                    filename={picked}
-                    maxHeight={460}
-                    wrap={false}
-                    showStatus={false}
-                    className="install-code"
-                  />
+                  <div className="install-code-slot">
+                    <CodeBlock
+                      code={file.content ?? ""}
+                      language={languageOf(file.target ?? file.path)}
+                      filename={picked}
+                      maxHeight={460}
+                      wrap
+                      showStatus={false}
+                      className="install-code"
+                    />
+                  </div>
                 ) : (
-                  <p className="sheet-log pt-1">
-                    {stalled ? "Could not read the item" : "Reading the item"}
+                  <p className="sheet-log pt-1" role={stalled ? "alert" : "status"}>
+                    {stalled
+                      ? "Unable to load the files. Check your connection and try again."
+                      : "Loading the files\u2026"}
                   </p>
                 )}
 
                 {dependencies.length ? (
                   <div className="mt-4">
-                    <p className="sheet-eyebrow mb-3">Its dependencies</p>
+                    <p className="sheet-eyebrow mb-3">Dependencies</p>
                     <CodeBlock
                       code={`npm i ${dependencies.join(" ")}`}
                       language="bash"
@@ -220,7 +248,12 @@ export function InstallSheet({ entry }: { entry: FigureEntry }) {
             </div>
           </div>
         ) : (
-          <div className="mt-5 min-w-0">
+          <div
+            className="mt-5 min-w-0"
+            role="tabpanel"
+            id={PANEL_ID}
+            aria-labelledby={tabId(mode)}
+          >
             <CodeBlock
               code={manager.run(url)}
               language="bash"
@@ -232,7 +265,7 @@ export function InstallSheet({ entry }: { entry: FigureEntry }) {
               className="install-code"
             />
             <p className="sheet-log mt-3">
-              Reads {origin}/r/{entry.slug}.json
+              The command reads {origin}/r/{entry.slug}.json
             </p>
           </div>
         )}

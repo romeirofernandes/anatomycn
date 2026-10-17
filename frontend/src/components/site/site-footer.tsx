@@ -11,8 +11,9 @@ export function SiteFooter() {
           rel="noreferrer"
         >
           romeiro
+          <span className="sr-only"> (opens in a new tab)</span>
         </a>
-        &#39;s agents
+        &rsquo;s agents
       </p>
       <p className="m-0">
         after the anatomy skill by{" "}
@@ -23,6 +24,7 @@ export function SiteFooter() {
           rel="noreferrer"
         >
           Aryan
+          <span className="sr-only"> (opens in a new tab)</span>
         </a>
       </p>
     </footer>

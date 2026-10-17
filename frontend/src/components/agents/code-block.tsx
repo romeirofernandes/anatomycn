@@ -38,6 +38,16 @@ export interface CodeBlockProps {
   className?: string;
 }
 
+/* local: the icon-swap recipe — both icons in one cell, cross-faded. Under
+   reduced motion only the opacity fade is left. */
+const copyGlyph = cn(
+  "size-3.5 [grid-area:1/1] transition-[opacity,filter,scale] duration-300",
+  "ease-[cubic-bezier(0.2,0,0,1)]",
+  "motion-reduce:scale-100 motion-reduce:blur-[0px]",
+);
+const copyShown = "scale-100 opacity-100 blur-[0px]";
+const copyHidden = "scale-[0.25] opacity-0 blur-[4px]";
+
 export function CodeBlock({
   code,
   language = "typescript",
@@ -56,6 +66,9 @@ export function CodeBlock({
   const viewportRef = useRef<HTMLDivElement>(null);
   const copyTimer = useRef<number | undefined>(undefined);
   const [copied, setCopied] = useState(false);
+  // local: a pane taller than its maxHeight is a scroll region, and a scroll
+  // region a keyboard user cannot reach is unreachable text
+  const [scrolls, setScrolls] = useState(false);
   const streaming = status === "streaming";
   const tokens = useAgentCodeTokens(code, language);
   const highlighted = useMemo(
@@ -75,6 +88,18 @@ export function CodeBlock({
     },
     [],
   );
+
+  // local: measure the pane so the frame only takes focus while it overflows
+  useLayoutEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+    const measure = () =>
+      setScrolls(viewport.scrollHeight > viewport.clientHeight + 1);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(viewport);
+    return () => observer.disconnect();
+  }, [code, wrap, maxHeight]);
 
   useLayoutEffect(() => {
     const viewport = viewportRef.current;
@@ -108,27 +133,31 @@ export function CodeBlock({
       data-state={status}
       aria-busy={streaming}
       className={cn(
-        "w-full overflow-hidden rounded-2xl bg-muted/80 text-sm",
+        "w-full overflow-hidden rounded-2xl bg-muted text-sm",
         className,
       )}
     >
       <div className="flex h-10 items-center gap-2.5 px-3">
         <FileCode2
           aria-hidden="true"
-          className="size-3.5 shrink-0 text-muted-foreground/70"
+          className="size-3.5 shrink-0 text-muted-foreground"
         />
         {filename ? (
-          <span className="min-w-0 truncate font-mono text-xs text-foreground/80">
+          // truncation is visual only; the title is the way back to the whole path
+          <span
+            className="min-w-0 truncate font-mono text-xs text-foreground/80"
+            title={typeof filename === "string" ? filename : undefined}
+          >
             {filename}
           </span>
         ) : null}
-        <span className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground/55">
+        <span className="text-xs font-medium uppercase tracking-[0.06em] text-muted-foreground">
           {language}
         </span>
         {showStatus ? (
           <span
             className={cn(
-              "ml-auto inline-flex shrink-0 items-center gap-1 text-[10px] font-medium",
+              "ml-auto inline-flex shrink-0 items-center gap-1 text-xs font-medium",
               streaming
                 ? "text-blue-600 dark:text-blue-400"
                 : "text-emerald-600 dark:text-emerald-400",
@@ -148,27 +177,34 @@ export function CodeBlock({
             aria-label={copied ? "Copied" : "Copy code"}
             title={copied ? "Copied" : "Copy code"}
             onClick={handleCopy}
-            whileTap={reduce ? undefined : { scale: 0.9 }}
+            whileTap={reduce ? undefined : { scale: 0.96 }}
             transition={SPRING_PRESS}
             className={cn(
               "grid size-7 shrink-0 place-items-center rounded-full text-muted-foreground outline-none transition-colors hover:bg-background/70 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring",
               !showStatus && "ml-auto",
             )}
           >
-            {copied ? (
-              <Check className="size-3.5" />
-            ) : (
-              <Copy className="size-3.5" />
-            )}
+            {/* local: both icons stay mounted in one cell, so the swap cross-fades
+                instead of popping. Under reduced motion only the fade is left. */}
+            <span aria-hidden="true" className="grid place-items-center">
+              <Check className={cn(copyGlyph, copied ? copyShown : copyHidden)} />
+              <Copy className={cn(copyGlyph, copied ? copyHidden : copyShown)} />
+            </span>
           </motion.button>
         ) : null}
       </div>
 
       <div
         ref={viewportRef}
-        role={streaming ? "log" : undefined}
+        role={streaming ? "log" : scrolls ? "region" : undefined}
         aria-live={streaming ? "polite" : undefined}
-        className="scrollbar-hide overflow-auto border-t border-foreground/[0.06] py-2"
+        aria-label={
+          !streaming && scrolls && typeof filename === "string"
+            ? `${filename} source`
+            : undefined
+        }
+        tabIndex={!streaming && scrolls ? 0 : undefined}
+        className="overflow-auto border-t border-foreground/[0.06] py-2"
         style={{ maxHeight }}
       >        <pre className="m-0 min-w-max font-mono text-xs leading-5 text-foreground/85">
           <code>
@@ -186,7 +222,7 @@ export function CodeBlock({
                   )}
                 >
                   {showLineNumbers ? (
-                    <span className="select-none pr-3 text-right tabular-nums text-muted-foreground/35">
+                    <span className="select-none pr-3 text-right tabular-nums text-muted-foreground">
                       {lineNumber}
                     </span>
                   ) : null}

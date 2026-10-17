@@ -16,7 +16,7 @@ import {
   type HTMLAttributes,
   type ReactNode,
 } from "react";
-import { EASE_OUT, SPRING_SWAP } from "@/lib/ease";
+import { EASE_OUT, SPRING_LAYOUT, SPRING_SWAP } from "@/lib/ease";
 import { cn } from "@/lib/utils";
 
 type Variant = "pill" | "underline" | "segment";
@@ -47,14 +47,10 @@ function useTabs() {
 }
 
 // Settle without overshoot: a scrollable tab list would turn even a small
-// overshoot into a transient scrollbar and layout shift.
-// Scale stiffness and damping together for a quicker glide with the same feel.
-const transition: Transition = {
-  type: "spring",
-  stiffness: 245,
-  damping: 36,
-  mass: 1.2,
-};
+// overshoot into a transient scrollbar and layout shift. This is the sheet's
+// shared layout spring, so the pill glides with the same physics as the file
+// tree's highlight instead of a second set of numbers.
+const transition: Transition = SPRING_LAYOUT;
 
 export function Tabs({
   defaultValue,
@@ -124,11 +120,12 @@ export function TabsList({
   children,
   className,
   wrapperClassName,
+  onKeyDown,
   ...props
 }: {
   wrapperClassName?: string;
 } & HTMLAttributes<HTMLDivElement>) {
-  const { variant, value, icons, track, placed, setPlaced } = useTabs();
+  const { variant, value, setValue, icons, track, placed, setPlaced } = useTabs();
   const reduce = useReducedMotion();
   const tracked = icons === "selected" && variant !== "underline";
   const rootRef = useRef<HTMLDivElement>(null);
@@ -327,7 +324,35 @@ export function TabsList({
           if (event.target instanceof HTMLElement && event.target.getAttribute("role") === "tab") reveal(event.target);
         }}
       >
-        <div {...props} ref={listRef} role="tablist" className={cn(listClasses[variant], "w-max", tracked && "relative", className)}>
+        <div
+          {...props}
+          ref={listRef}
+          role="tablist"
+          className={cn(listClasses[variant], "w-max", tracked && "relative", className)}
+          onKeyDown={(event) => {
+            onKeyDown?.(event);
+            if (event.defaultPrevented) return;
+            // local: the ARIA tabs pattern also moves between tabs with arrows
+            const step =
+              event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
+            if (!step && event.key !== "Home" && event.key !== "End") return;
+            const tabs = Array.from(
+              listRef.current?.querySelectorAll<HTMLElement>('[role="tab"]') ?? [],
+            );
+            const at = tabs.indexOf(document.activeElement as HTMLElement);
+            if (at < 0 || tabs.length < 2) return;
+            const next =
+              event.key === "Home"
+                ? 0
+                : event.key === "End"
+                  ? tabs.length - 1
+                  : (at + step + tabs.length) % tabs.length;
+            event.preventDefault();
+            tabs[next]?.focus();
+            const picked = tabs[next]?.dataset.tabsValue;
+            if (picked) setValue(picked);
+          }}
+        >
           {children}
         </div>
       </motion.div>

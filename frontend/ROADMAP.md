@@ -49,3 +49,8 @@ out, a scan processed, a thing cleaned up.
 - One `requestAnimationFrame` loop per figure, refs only, no React render per
   frame, and no motion while the figure is off screen or the reader has asked
   for less motion.
+- A figure that starts on its own keeps a visible pause control wherever it is
+  embedded, cards included: motion that outlives five seconds has to be
+  stoppable.
+- Secondary text rides `--anatomy-muted` and has to clear 4.5:1 on the page, on
+  a card and on the code surface, in both themes. The token moves, not the rule.

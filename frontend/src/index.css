@@ -70,8 +70,9 @@
   min-height: 100vh;
   background: var(--anatomy-page);
   color: var(--anatomy-text);
-  /* the drawing column: matches max-w-3xl on the body */
-  --column: 48rem;
+  /* one smoothing decision for the whole sheet, not per component */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   /* `cn`: a blue out of the field's own range */
   --site-blue: #38bdf8;
 }
@@ -99,10 +100,40 @@
   box-shadow: inset 1px 0 0 var(--anatomy-lo), inset -1px 0 0 var(--anatomy-lo);
 }
 
+/*
+  Repeated chrome (the wordmark, the theme toggle) precedes the page on every
+  route, so the first thing in the tab order is the way past it. It stays in the
+  a11y tree and comes in on focus, which is why it is opacity rather than
+  display.
+*/
+.skip-link {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  padding: 7px 12px;
+  border: 1px solid var(--anatomy-mid);
+  border-radius: 2px;
+  background: var(--anatomy-card);
+  color: var(--anatomy-strong);
+  font-family: var(--anatomy-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.skip-link:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .sheet-eyebrow {
   color: var(--anatomy-muted);
   font-family: var(--anatomy-mono);
-  font-size: 11px;
+  font-size: 0.75rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
 }
@@ -113,56 +144,20 @@
   border: 0;
 }
 
+/*
+  60–75 characters is the readable band; 58ch sat just under it and filled
+  little more than half the column. `pretty` keeps a lone last word off the line.
+*/
 .sheet-lede {
   color: var(--anatomy-text);
-  max-width: 58ch;
+  max-width: 62ch;
+  text-wrap: pretty;
 }
 
 /* Small controls and chips, same hand as the figures */
-.sheet-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border: 1px solid var(--anatomy-mid);
-  background: color-mix(in srgb, var(--anatomy-card) 80%, transparent);
-  color: var(--anatomy-strong);
-  font-family: var(--anatomy-mono);
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 7px 12px;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: border-color 160ms var(--anatomy-ease), color 160ms var(--anatomy-ease),
-    background-color 160ms var(--anatomy-ease);
-}
-.sheet-btn:hover {
-  border-color: var(--anatomy-hi);
-}
-.sheet-btn:active {
-  transform: translateY(0.5px);
-}
-.sheet-btn[data-mode="chip"] {
-  padding: 6px 9px;
-  color: var(--anatomy-muted);
-  border-color: var(--anatomy-faint);
-  background: transparent;
-}
-.sheet-btn[data-mode="chip"]:hover {
-  color: var(--anatomy-text);
-  border-color: var(--anatomy-mid);
-}
-.sheet-btn[aria-pressed="true"] {
-  border-color: var(--anatomy-hi);
-  color: var(--anatomy-strong);
-}
-.sheet-btn[data-role="primary"] {
-  border-color: var(--anatomy-hi);
-}
-
 .sheet-log {
   font-family: var(--anatomy-mono);
-  font-size: 11px;
+  font-size: 0.75rem;
   letter-spacing: 0.04em;
   color: var(--anatomy-muted);
   font-variant-numeric: tabular-nums;
@@ -187,11 +182,14 @@
   cursor: pointer;
   transition: transform 160ms var(--anatomy-ease);
 }
-.theme-toggle:hover {
-  transform: scale(1.06);
+/* hover only where a pointer can actually hover: a tap latches :hover */
+@media (hover: hover) {
+  .theme-toggle:hover {
+    transform: scale(1.06);
+  }
 }
 .theme-toggle:active {
-  transform: scale(0.95);
+  transform: scale(0.96);
 }
 .theme-toggle svg {
   display: block;
@@ -238,32 +236,24 @@
   }
 }
 
-/* ——— figure states shared by the drawings ——— */
-.iso-led {
-  stroke: none;
-}
-.iso-led[data-state="idle"] {
-  opacity: 0.3;
-}
-.iso-led[data-state="live"] {
-  opacity: 1;
-}
-
-@media (max-width: 560px) {
-  .sheet-lede {
-    font-size: 13px;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(root),
-  ::view-transition-new(root) {
+  ::view-transition-group(root) {
     animation: none;
+  }
+  /* movement becomes a cross-fade rather than an instant cut */
+  ::view-transition-new(root) {
+    animation: reveal-fade 150ms ease-out;
   }
   .theme-toggle,
   .theme-toggle-disc,
   .theme-toggle-ring {
     transition: none;
+  }
+}
+
+@keyframes reveal-fade {
+  from {
+    opacity: 0;
   }
 }
 
@@ -283,10 +273,44 @@
 .sheet[data-theme="light"] .install {
   --anatomy-faint: #e9e9e4;
   --anatomy-lo: #d9d9d3;
-  --anatomy-muted: #7b7b76;
+}
+
+/*
+  beUI draws on a soft scale (8/12/16px) while the sheet is hard-edged. Remap
+  the radius tokens for this subtree only, so the vendored components keep their
+  own class names and land in the sheet's hand.
+*/
+.install {
+  --radius-md: 2px;
+  --radius-lg: 2px;
+  --radius-xl: 2px;
+  --radius-2xl: 2px;
+}
+
+/* the manual tab swaps a one-line placeholder for a tall block: hold the space */
+.install-code-slot {
+  min-height: 8rem;
+}
+
+.install-code-slot > * {
+  animation: install-fade 150ms ease-out;
+}
+
+@keyframes install-fade {
+  from {
+    opacity: 0;
+  }
 }
 
 /* ——— site chrome ——— */
+/*
+  Focus lands on <main> after a route change and from the skip link. It is a
+  container, not a control, so the ring would only trace the whole page.
+*/
+main:focus {
+  outline: none;
+}
+
 .site-mark {
   color: var(--anatomy-strong);
   text-decoration: none;
@@ -301,7 +325,7 @@
   align-items: center;
   gap: 6px;
   font-family: var(--anatomy-mono);
-  font-size: 11px;
+  font-size: 0.75rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--anatomy-muted);
@@ -309,8 +333,10 @@
   transition: color 160ms var(--anatomy-ease);
 }
 
-.site-back:hover {
-  color: var(--anatomy-strong);
+@media (hover: hover) {
+  .site-back:hover {
+    color: var(--anatomy-strong);
+  }
 }
 
 .site-credit {
@@ -321,9 +347,11 @@
   transition: color 160ms var(--anatomy-ease), text-decoration-color 160ms var(--anatomy-ease);
 }
 
-.site-credit:hover {
-  color: var(--site-blue);
-  text-decoration-color: var(--site-blue);
+@media (hover: hover) {
+  .site-credit:hover {
+    color: var(--site-blue);
+    text-decoration-color: var(--site-blue);
+  }
 }
 
 /* file marks for the manual file tree (svgl.app art in public/file-icons) */
@@ -356,37 +384,51 @@
    Tailwind spacing utility on the same element. Preflight already clears it. */
 .figure-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 24px 20px;
 }
 
+/*
+  The card is one link. The link is the title, and its ::after stretches the hit
+  area over the whole card, so the figure's play/pause control can stay a real
+  control instead of a button nested inside an anchor.
+*/
 .figure-card {
+  position: relative;
   min-width: 0;
 }
 
 .figure-card-link {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
   color: inherit;
   text-decoration: none;
 }
 
-/* the plate is already the boundary; the card just lets it answer the pointer */
-.figure-card .the-zip-plate,
-.figure-card .the-turntable-plate {
-  transition: box-shadow 180ms var(--anatomy-ease);
+.figure-card-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
 }
 
-.figure-card-link:hover .the-zip-plate,
-.figure-card-link:hover .the-turntable-plate {
-  box-shadow: 0 0 0 1px var(--anatomy-hi);
+/* the ring wraps the card, matching where the pointer activates */
+.figure-card-link:focus-visible {
+  outline: none;
 }
 
-/* the figure's own control belongs to its page, not to a card */
-.figure-card .the-zip-control,
-.figure-card .the-turntable-control {
-  display: none;
+.figure-card-link:focus-visible::after {
+  outline: 1px solid var(--anatomy-hi);
+  outline-offset: 5px;
+}
+
+/* the art sits above that hit area, and only its controls answer the pointer */
+.figure-card-art {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.figure-card-art .the-zip-control,
+.figure-card-art .the-turntable-control {
+  pointer-events: auto;
 }
 
 /* the plates take their padding from the viewport; a card is not the viewport */
@@ -398,11 +440,17 @@
   --the-turntable-pad: 14px;
 }
 
+/* the plate is already the boundary; the card just lets it answer the pointer */
+.figure-card .the-zip-plate,
+.figure-card .the-turntable-plate {
+  transition: box-shadow 180ms var(--anatomy-ease);
+}
+
 .figure-card-text {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  padding: 12px 1px 0;
+  padding: 12px 0 0;
 }
 
 .figure-card-name {
@@ -412,14 +460,22 @@
 }
 
 .figure-card-tagline {
-  font-size: 12px;
+  font-size: 0.75rem;
   line-height: 1.55;
   color: var(--anatomy-muted);
+  text-wrap: pretty;
   transition: color 180ms var(--anatomy-ease);
 }
 
-.figure-card-link:hover .figure-card-tagline {
-  color: var(--anatomy-text);
+@media (hover: hover) {
+  .figure-card-link:hover .the-zip-plate,
+  .figure-card-link:hover .the-turntable-plate {
+    box-shadow: 0 0 0 1px var(--anatomy-hi);
+  }
+
+  .figure-card-link:hover .figure-card-tagline {
+    color: var(--anatomy-text);
+  }
 }
 
 /* ——— what a figure is for ——— */
@@ -430,8 +486,8 @@
 
 .use-list li {
   position: relative;
-  padding-left: 20px;
-  font-size: 13px;
+  padding-inline-start: 20px;
+  font-size: 0.8125rem;
   line-height: 1.6;
   color: var(--anatomy-text);
 }
@@ -441,7 +497,7 @@
   content: "";
   position: absolute;
   top: 7px;
-  left: 2px;
+  inset-inline-start: 2px;
   width: 6px;
   height: 6px;
   border: 1px solid var(--anatomy-mid);

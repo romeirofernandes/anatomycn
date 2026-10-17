@@ -7,7 +7,7 @@ export function Landing({ theme }: { theme: Theme }) {
     <section className="pb-12 pt-6 sm:pb-16">
       <p className="sheet-eyebrow">Anatomy in React</p>
       <h1
-        className="font-pixel pixel-square mb-0 mt-4 text-2xl leading-tight sm:text-3xl"
+        className="font-pixel pixel-square mb-0 mt-4 text-balance text-2xl leading-tight sm:text-3xl"
         style={{ color: "var(--anatomy-strong)" }}
       >
         Isometric figures that move
@@ -17,7 +17,7 @@ export function Landing({ theme }: { theme: Theme }) {
         depth-sorted parts, four tones from a single light. Animation is one
         requestAnimationFrame loop writing straight to the DOM, so nothing
         re-renders per frame, and a figure stops itself when it leaves the
-        viewport or when the visitor asks for less motion.
+        viewport or when you ask for less motion.
       </p>
 
       <ul className="figure-grid mt-9">

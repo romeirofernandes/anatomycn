@@ -129,6 +129,8 @@ export function TheZip({
     if (host) {
       const shown = String(Math.round(at));
       if (host.getAttribute("aria-valuenow") !== shown) host.setAttribute("aria-valuenow", shown);
+      const open = `${Math.round(((at - SLIDER_MIN) / (SLIDER_MAX - SLIDER_MIN)) * 100)}% open`;
+      if (host.getAttribute("aria-valuetext") !== open) host.setAttribute("aria-valuetext", open);
     }
   }, []);
 
@@ -198,11 +200,12 @@ export function TheZip({
           role="slider"
           tabIndex={playing ? -1 : 0}
           data-interactive={playing ? undefined : ""}
-          aria-label="A zip: drag along it to pull the slider, or use the arrow keys"
+          aria-label="A zip: pause it, then drag the slider or use the arrow keys"
           aria-readonly={playing}
           aria-valuemin={Math.round(SLIDER_MIN)}
           aria-valuemax={Math.round(SLIDER_MAX)}
           aria-valuenow={Math.round(SLIDER_MIN)}
+          aria-valuetext="0% open"
           style={{ touchAction: "pan-y" }}
           onPointerDown={(event) => {
             if (playing) return;
