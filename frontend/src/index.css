@@ -85,8 +85,9 @@
    markup next to the credit it draws. */
 :root {
   --squiggle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='4' viewBox='0 0 8 4'%3E%3Cpath d='M0 2Q2 0 4 2T8 2' fill='none' stroke='white' stroke-width='1.3' stroke-linecap='round'/%3E%3C/svg%3E");
-  --expo-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --wipe-duration: 620ms;
+  /* the dissolve: one second, eased in and out, the way its shader runs */
+  --dissolve-duration: 1000ms;
+  --dissolve-ease: cubic-bezier(0.45, 0, 0.55, 1);
 }
 
 /*
@@ -117,47 +118,88 @@ main:focus,
   outline: none;
 }
 
-/* ——— Theme wipe: a rectangle rising from the bottom, blurred, and the toggle
-       turning with it ——— */
-::view-transition-group(root) {
-  animation-duration: var(--wipe-duration);
-  animation-timing-function: var(--expo-out);
+/* ——— The theme dissolve ———
+   Lifted from the theme transition in romeirofernandes/me. There, the incoming
+   theme comes through a threshold that opens from the middle of the window and
+   grows past the corners: the outgoing picture loses its colour as it comes
+   apart, the incoming one arrives black and grey and colours in as it lands,
+   and the whole thing takes one second, eased in and out.
+
+   The one thing that had to change is what is being dissolved. That transition
+   holds two photographs, so it holds two textures and runs them through a
+   shader; a page has no photograph of itself to hand, but the view transition
+   already takes its own two pictures, so the same maths runs as a mask on the
+   incoming one. Same threshold, same second, same greying, same arrival out of
+   black, one shader and two photographs fewer. */
+@property --dissolve-edge {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
 }
 
+::view-transition-group(root) {
+  animation-duration: var(--dissolve-duration);
+  animation-timing-function: var(--dissolve-ease);
+}
+
+/* The outgoing sheet sits under the incoming one and stays whole, which is what
+   makes a mask on the incoming side a reveal of the old page instead of a hole
+   in it. It only loses its colour, on the shader's own curve: full grey by the
+   time the threshold is a third of the way across. */
 ::view-transition-old(root) {
-  animation: none;
+  animation: dissolve-away var(--dissolve-duration) var(--dissolve-ease) both;
   z-index: -1;
 }
 
+/* The threshold's edge is soft by five percent of its own radius, which is the
+   shader's 0.03 of the frame's diagonal, and it ends past the corners: the
+   diagonal is 100%. */
 ::view-transition-new(root) {
-  animation-name: reveal-from-bottom;
+  mask-image: radial-gradient(
+    circle at 50% 50%,
+    #000 calc(var(--dissolve-edge) - 2.5%),
+    transparent var(--dissolve-edge)
+  );
+  animation: dissolve-in var(--dissolve-duration) var(--dissolve-ease) both;
 }
 
-@keyframes reveal-from-bottom {
+@keyframes dissolve-away {
   from {
-    clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);
-    filter: blur(8px);
+    filter: grayscale(0);
   }
-  50% {
-    filter: blur(4px);
+  40% {
+    filter: grayscale(1);
   }
   to {
-    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
-    filter: blur(0px);
+    filter: grayscale(1);
+  }
+}
+
+/* from black, not from nothing: the second plane in the shader starts at
+   zero brightness and greyscale, and colours in as the threshold passes */
+@keyframes dissolve-in {
+  from {
+    --dissolve-edge: 0%;
+    filter: brightness(0) grayscale(1);
+  }
+  to {
+    --dissolve-edge: 118%;
+    filter: brightness(1) grayscale(0);
   }
 }
 
 /*
   The toggle carries its own view-transition name, which lifts it out of the
-  root snapshot. Without that it would only be part of the picture the wipe
+  root snapshot. Without that it would only be part of the picture the dissolve
   reveals, and its turn would happen behind the snapshot; with it, the toggle
-  turns over the top while the background sweeps past, and the two read as one
-  gesture. The turn itself is the wipe's, so the discs drop their own transition
-  wherever a view transition exists (see the toggle's markup).
+  turns over the top while the threshold opens past it, and the two read as one
+  gesture. The turn takes the dissolve's own second and curve, so the discs drop
+  their own transition wherever a view transition exists (see the toggle's
+  markup).
 */
 ::view-transition-group(theme-toggle) {
-  animation-duration: var(--wipe-duration);
-  animation-timing-function: var(--expo-out);
+  animation-duration: var(--dissolve-duration);
+  animation-timing-function: var(--dissolve-ease);
 }
 
 ::view-transition-old(theme-toggle) {
@@ -190,9 +232,14 @@ html[data-theme="dark"]::view-transition-new(theme-toggle) {
   ::view-transition-group(theme-toggle) {
     animation: none;
   }
-  /* movement becomes a cross-fade rather than an instant cut */
+  /* movement becomes a cross-fade rather than an instant cut, so the threshold
+     and the greying both come off and the colour is the caller's own */
+  ::view-transition-old(root) {
+    animation: none;
+  }
   ::view-transition-new(root) {
     animation: reveal-fade 150ms ease-out;
+    mask-image: none;
   }
   ::view-transition-new(theme-toggle) {
     animation: none;
@@ -210,6 +257,19 @@ html[data-theme="dark"]::view-transition-new(theme-toggle) {
    sheet wants the command to wrap in the column rather than scroll sideways */
 .install-code pre {
   min-width: 0;
+}
+
+/*
+  A file runs to four hundred lines and the panel only ever shows twenty of
+  them, but every one is a grid of spans that the browser has to measure before
+  it can paint. Skipping the measure of the lines nobody is looking at is what
+  keeps the manual tab's first paint cheap. `auto` means a line keeps the height
+  it had the last time it was seen, and a code line here is one line high at
+  twenty pixels until it wraps.
+*/
+.install-code pre > code > span {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 20px;
 }
 
 /*
@@ -279,6 +339,17 @@ html[data-theme="dark"]::view-transition-new(theme-toggle) {
   .figure-card:hover .the-turntable-plate {
     box-shadow: 0 0 0 1px var(--anatomy-hi);
   }
+}
+
+/*
+  A card's drawing is the link while it runs, so the pointer belongs to the title
+  underneath it. Once the tour is paused the drawing is the reader's, the way it
+  is on the figure's own page: the stage takes the pointer back and a drag stays
+  a drag. The pause control answers either way, and the stage carries its own
+  cursor for the state it is in.
+*/
+.figure-card [data-interactive] {
+  pointer-events: auto;
 }
 
 /* the ring wraps the card, matching where the pointer activates */

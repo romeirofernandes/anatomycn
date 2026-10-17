@@ -110,6 +110,64 @@ function tokenCacheKey(code: string, language: AgentCodeLanguage) {
   return `${language}\u0000${code}`;
 }
 
+/** one shape for a token run, whether it is asked for now or warmed ahead */
+function tokenize(
+  highlighter: Highlighter,
+  code: string,
+  language: AgentCodeLanguage,
+): AgentCodeTokenLines {
+  return highlighter
+    .codeToTokensWithThemes(code, {
+      lang: language,
+      themes: {
+        light: LIGHT_THEME,
+        dark: DARK_THEME,
+      },
+    })
+    .map((line) =>
+      line.map((token) => ({
+        content: token.content,
+        offset: token.offset,
+        light: token.variants.light?.color,
+        dark: token.variants.dark?.color,
+      })),
+    );
+}
+
+/**
+ * local: colour a file before anybody asks for it. The manual install tab lists
+ * every file in the item, so its first visit would otherwise pay for a fetch,
+ * four grammar chunks and a tokenise in the same frame, which is where its
+ * first click went. Run a few hundred milliseconds early, while the page is
+ * idle, it is paid off out of sight and the tab opens on a paint.
+ */
+export async function warmAgentCode(
+  code: string,
+  language: AgentCodeLanguage,
+): Promise<void> {
+  const key = tokenCacheKey(code, language);
+  if (tokenCache.has(key)) return;
+  try {
+    const highlighter = await withGrammar(language);
+    if (!tokenCache.has(key)) {
+      tokenCache.set(key, tokenize(highlighter, code, language));
+    }
+  } catch {
+    // a warm-up that fails is not worth a word: the block says so itself
+  }
+}
+
+/** local: load one grammar, without colouring anything with it yet */
+export async function warmAgentCodeGrammar(
+  language: AgentCodeLanguage,
+): Promise<void> {
+  try {
+    await withGrammar(language);
+  } catch {
+    // as above
+  }
+}
+
 export function useAgentCodeTokens(
   code: string,
   language: AgentCodeLanguage,
@@ -133,22 +191,8 @@ export function useAgentCodeTokens(
     let cancelled = false;
     withGrammar(language).then((highlighter) => {
       if (cancelled) return;
-      const lines = highlighter
-        .codeToTokensWithThemes(code, {
-          lang: language,
-          themes: {
-            light: LIGHT_THEME,
-            dark: DARK_THEME,
-          },
-        })
-        .map((line) =>
-          line.map((token) => ({
-            content: token.content,
-            offset: token.offset,
-            light: token.variants.light?.color,
-            dark: token.variants.dark?.color,
-          })),
-      );
+      // a warm-up may have landed first: take its run rather than a second one
+      const lines = tokenCache.get(key) ?? tokenize(highlighter, code, language);
       tokenCache.set(key, lines);
       setResult({ key, code, language, lines });
     });

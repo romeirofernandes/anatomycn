@@ -47,9 +47,21 @@ export function FigurePage({ entry, theme }: { entry: FigureEntry; theme: Theme 
           {entry.uses.map((use) => (
             <li
               key={use}
-              className="relative ps-5 text-base leading-relaxed text-body before:absolute before:start-0.5 before:top-[0.45em] before:size-1.5 before:rotate-45 before:border before:border-(--anatomy-mid) before:content-['']"
+              className="flex items-start gap-3 text-base leading-relaxed text-body"
             >
-              {use}
+              {/*
+                The mark hangs in a box exactly the height of the first line and
+                is centred in it, then nudged down its own one pixel: the eye
+                reads the middle of a line at the x-height, which sits below the
+                middle of the line box, so a mark that is dead centre reads high.
+              */}
+              <span
+                aria-hidden="true"
+                className="grid h-[1.625em] shrink-0 place-items-center"
+              >
+                <span className="size-1.5 translate-y-[1.25px] rotate-45 border border-(--anatomy-mid)" />
+              </span>
+              <span className="min-w-0">{use}</span>
             </li>
           ))}
         </ul>

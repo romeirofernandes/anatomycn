@@ -1,6 +1,10 @@
 import * as React from "react";
 import { CodeBlock } from "@/components/agents/code-block";
-import type { AgentCodeLanguage } from "@/components/agents/agent-code";
+import {
+  type AgentCodeLanguage,
+  warmAgentCode,
+  warmAgentCodeGrammar,
+} from "@/components/agents/agent-code";
 import { FileTree, FileTreeFile, FileTreeFolder } from "@/components/motion/file-tree";
 import { Tabs, TabsList, TabsTrigger } from "@/components/motion/tabs";
 import { FileTypeIcon } from "@/components/site/file-type-icon";
@@ -120,15 +124,76 @@ export function InstallSheet({ entry }: { entry: FigureEntry }) {
   const tree = React.useMemo(() => plant(entry.files), [entry.files]);
   const target = React.useMemo(() => branchPaths(tree), [tree]);
   const files = React.useMemo(() => new Set(target.files), [target]);
-  // open on the figure itself, not on whatever sorts first in the kit
-  const [picked, setPicked] = React.useState(
+  // open on the figure itself, not on whatever sorts first in the kit; it is
+  // also the file the warm-up colours first
+  const initialFile = React.useMemo(
     () => (entry.files[0] ?? "").replace(/^@\/?/, ""),
+    [entry.files],
   );
+  const [picked, setPicked] = React.useState(initialFile);
 
   const url = `${origin}/r/${entry.slug}.json`;
   const manager = MANAGERS.find((row) => row.id === mode) ?? MANAGERS[0];
 
-  // The item is only worth fetching once somebody wants to read it.
+  /*
+    The manual tab is the only thing on this page that reads the item, and
+    reading it costs a fetch, one grammar chunk per language in the tree and a
+    tokenise of the file it opens on. None of that is needed until somebody
+    opens the tab, but all of it can be paid for while the page is idle, which
+    is the difference between the first click painting and the first click
+    stalling. Whatever this leaves undone, the effect below does on demand.
+  */
+  React.useEffect(() => {
+    let live = true;
+
+    const warm = async () => {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) return;
+        const data = (await response.json()) as RegistryItem;
+        if (!live) return;
+        setItem(data);
+
+        const rows = data.files ?? [];
+        await Promise.all(
+          rows.map((row) =>
+            warmAgentCodeGrammar(languageOf(row.target ?? row.path)),
+          ),
+        );
+        if (!live) return;
+
+        const opening = rows.find(
+          (row) =>
+            (row.target ?? row.path).replace(/^@\/?/, "") === initialFile,
+        );
+        if (opening?.content) {
+          await warmAgentCode(
+            opening.content,
+            languageOf(opening.target ?? opening.path),
+          );
+        }
+        if (live) await warmAgentCode(MANAGERS[0].run(url), "bash");
+      } catch {
+        // the panel reports its own trouble when it is opened
+      }
+    };
+
+    const idle =
+      typeof window.requestIdleCallback === "function"
+        ? window.requestIdleCallback(warm, { timeout: 2500 })
+        : window.setTimeout(warm, 500);
+
+    return () => {
+      live = false;
+      if (typeof window.cancelIdleCallback === "function") {
+        window.cancelIdleCallback(idle);
+      } else {
+        window.clearTimeout(idle);
+      }
+    };
+  }, [initialFile, url]);
+
+  // The item is still fetched on demand, in case the warm-up never landed.
   React.useEffect(() => {
     if (mode !== "manual" || item) return;
     let live = true;
@@ -271,9 +336,6 @@ export function InstallSheet({ entry }: { entry: FigureEntry }) {
               showStatus={false}
               className="install-code"
             />
-            <p className={`${LOG} mt-3`}>
-              The command reads {origin}/r/{entry.slug}.json
-            </p>
           </div>
         )}
       </div>
