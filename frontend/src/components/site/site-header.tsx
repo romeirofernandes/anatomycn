@@ -8,11 +8,11 @@ export function SiteHeader({ theme, onToggle }: { theme: Theme; onToggle: () => 
     <header className="flex items-center justify-between gap-6 py-6">
       <Link
         to="/"
-        className="site-mark font-pixel pixel-square text-2xl leading-none"
+        className="font-pixel pixel-square text-2xl leading-none text-foreground no-underline"
         aria-label="anatomycn, home"
       >
         anatomy
-        <span className="site-mark-cn">cn</span>
+        <span className="text-[#38bdf8] light:text-[#1e3fd8]">cn</span>
       </Link>
       <ThemeToggle theme={theme} onToggle={onToggle} />
     </header>

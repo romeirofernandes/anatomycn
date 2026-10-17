@@ -13,17 +13,22 @@ export function FigureCard({ entry, theme }: { entry: FigureEntry; theme: Theme 
   const { Figure } = entry;
 
   return (
-    <li className="figure-card">
-      <div className="figure-card-art">
+    <li className="figure-card group/card relative min-w-0">
+      <div className="relative z-1 pointer-events-none [&_button]:pointer-events-auto">
         <Figure theme={theme} />
       </div>
-      <div className="figure-card-text">
-        <p className="figure-card-name font-pixel pixel-square m-0">
-          <Link to={`/${entry.slug}`} className="figure-card-link">
+      <div className="flex flex-col gap-1.5 pt-3.5">
+        <p className="font-pixel pixel-square m-0 text-base leading-tight text-foreground">
+          <Link
+            to={`/${entry.slug}`}
+            className="figure-card-link text-inherit no-underline after:absolute after:inset-0 after:content-['']"
+          >
             {entry.name}
           </Link>
         </p>
-        <p className="figure-card-tagline m-0">{entry.tagline}</p>
+        <p className="m-0 text-[0.8125rem] leading-[1.55] text-pretty text-muted-foreground transition-colors group-hover/card:text-body">
+          {entry.tagline}
+        </p>
       </div>
     </li>
   );

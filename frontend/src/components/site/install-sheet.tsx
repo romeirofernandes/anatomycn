@@ -97,6 +97,10 @@ function languageOf(name: string): AgentCodeLanguage {
 /* one sheet renders per page, so the ids only have to line up with each other */
 const tabId = (mode: Mode) => `install-tab-${mode}`;
 
+/* the small uppercase label above a block, and the tabular log lines under it */
+const LABEL = "mb-3 font-mono text-xs tracking-[0.22em] text-muted-foreground uppercase";
+const LOG = "font-mono text-xs tracking-[0.04em] text-muted-foreground tabular-nums";
+
 /*
   The tab list swaps one region rather than holding one panel per manager: the
   manual panel fetches and highlights every file in the item, so mounting all
@@ -115,6 +119,7 @@ export function InstallSheet({ entry }: { entry: FigureEntry }) {
 
   const tree = React.useMemo(() => plant(entry.files), [entry.files]);
   const target = React.useMemo(() => branchPaths(tree), [tree]);
+  const files = React.useMemo(() => new Set(target.files), [target]);
   // open on the figure itself, not on whatever sorts first in the kit
   const [picked, setPicked] = React.useState(
     () => (entry.files[0] ?? "").replace(/^@\/?/, ""),
@@ -150,17 +155,13 @@ export function InstallSheet({ entry }: { entry: FigureEntry }) {
 
   return (
     <section className="py-10 sm:py-14">
-      <h2
-        className="font-pixel pixel-square m-0 text-balance text-xl leading-tight"
-        style={{ color: "var(--anatomy-strong)" }}
-      >
+      <h2 className="font-pixel pixel-square m-0 text-xl leading-tight text-balance text-foreground">
         Install
       </h2>
-      <p className="sheet-lede mt-3 text-sm">
-        {entry.name} ships as its own shadcn item. One command writes the component,
-        the kit it draws with and the stylesheet, so what lands is yours to edit.
-        Nothing is fetched at runtime, and none of it depends on this site&rsquo;s
-        styles.
+      <p className="mt-3 text-base leading-relaxed text-body text-justify hyphens-auto">
+        {entry.name} is one shadcn item: the component, the kit it draws with and
+        its stylesheet, written into your project ready to edit. Nothing is
+        fetched at runtime.
       </p>
 
       <div className="install mt-7">
@@ -189,7 +190,7 @@ export function InstallSheet({ entry }: { entry: FigureEntry }) {
             id={PANEL_ID}
             aria-labelledby={tabId("manual")}
           >
-            <p className="sheet-lede mb-5 text-sm">
+            <p className="mb-5 text-base leading-relaxed text-body text-justify hyphens-auto">
               Or take the files. Each one below is exactly what the command writes,
               at the same path under your <code>@/</code> root, so a copy and paste
               lands where the imports expect it.
@@ -197,11 +198,17 @@ export function InstallSheet({ entry }: { entry: FigureEntry }) {
 
             <div className="grid gap-6 sm:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)]">
               <div className="min-w-0">
-                <p className="sheet-eyebrow mb-3">Files</p>
+                <p className={LABEL}>Files</p>
                 <FileTree
                   ariaLabel={`Files the ${entry.name} item writes`}
                   value={picked}
-                  onValueChange={setPicked}
+                  onValueChange={(next) => {
+                    // A folder row reports its own path as the selection when it
+                    // is collapsed, which would leave the panel with nothing to
+                    // show. Only a real file moves the pick, so the code on the
+                    // right stays where it was while the tree is folded away.
+                    if (files.has(next)) setPicked(next);
+                  }}
                   defaultExpandedIds={target.folders}
                 >
                   {branchesOf(tree)}
@@ -210,7 +217,7 @@ export function InstallSheet({ entry }: { entry: FigureEntry }) {
 
               <div className="min-w-0">
                 {file ? (
-                  <div className="install-code-slot">
+                  <div className="min-h-32 [&>*]:animate-install-fade">
                     <CodeBlock
                       code={file.content ?? ""}
                       language={languageOf(file.target ?? file.path)}
@@ -222,7 +229,7 @@ export function InstallSheet({ entry }: { entry: FigureEntry }) {
                     />
                   </div>
                 ) : (
-                  <p className="sheet-log pt-1" role={stalled ? "alert" : "status"}>
+                  <p className={`${LOG} pt-1`} role={stalled ? "alert" : "status"}>
                     {stalled
                       ? "Unable to load the files. Check your connection and try again."
                       : "Loading the files\u2026"}
@@ -231,7 +238,7 @@ export function InstallSheet({ entry }: { entry: FigureEntry }) {
 
                 {dependencies.length ? (
                   <div className="mt-4">
-                    <p className="sheet-eyebrow mb-3">Dependencies</p>
+                    <p className={LABEL}>Dependencies</p>
                     <CodeBlock
                       code={`npm i ${dependencies.join(" ")}`}
                       language="bash"
@@ -264,7 +271,7 @@ export function InstallSheet({ entry }: { entry: FigureEntry }) {
               showStatus={false}
               className="install-code"
             />
-            <p className="sheet-log mt-3">
+            <p className={`${LOG} mt-3`}>
               The command reads {origin}/r/{entry.slug}.json
             </p>
           </div>

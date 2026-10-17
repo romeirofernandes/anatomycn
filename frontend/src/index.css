@@ -6,12 +6,25 @@
    theme attribute so the drawing and the components flip together, instead of
    following the operating system. */
 @custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
+/* The same switch read the other way, for the placeholders that name the light
+   theme instead of the dark one. */
+@custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
 
 /* ——— Type: Geist for everything, Geist Pixel for the masthead ——— */
 @theme {
   --font-sans: "Geist Variable", ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --font-pixel: "Geist Pixel Variable", var(--font-sans);
+
+  /* the manual install tab swaps a one-line placeholder for a tall block */
+  --animate-install-fade: install-fade 150ms ease-out;
+
+  @keyframes install-fade {
+    from {
+      opacity: 0;
+    }
+  }
 }
 
 /* Geist Pixel ships five shapes on one axis (ELSH 0–100). Keep square as the
@@ -38,13 +51,16 @@
 }
 
 /*
-  beUI components (the install section) speak shadcn's token names. `inline`
-  makes Tailwind write the anatomy variable straight into the utility, so one
-  set of classes follows the theme instead of freezing at load.
+  The sheet's three text tones and its hairline, named for the utilities. beUI
+  speaks shadcn's token names, so the rest of the map keeps both languages
+  working off the one set of anatomy variables. `inline` makes Tailwind write
+  the variable straight into the utility, so a class follows the theme instead
+  of freezing at load.
 */
 @theme inline {
   --color-background: var(--anatomy-page);
   --color-foreground: var(--anatomy-strong);
+  --color-body: var(--anatomy-text);
   --color-card: var(--anatomy-card);
   --color-card-foreground: var(--anatomy-strong);
   --color-popover: var(--anatomy-card);
@@ -64,150 +80,45 @@
   --color-ring: var(--anatomy-hi);
 }
 
-/* ——— The sheet: the column, and the field running behind it ——— */
-.sheet {
-  position: relative;
-  min-height: 100vh;
-  background: var(--anatomy-page);
-  color: var(--anatomy-text);
-  /* one smoothing decision for the whole sheet, not per component */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  /* `cn`: a blue out of the field's own range */
-  --site-blue: #38bdf8;
-}
-
-.sheet[data-theme="light"] {
-  --site-blue: #1e3fd8;
+/* One wave, tiled under a credit and painted in the credit's own colour. A
+   token rather than a utility: it is a data URI, and the mask stays in the
+   markup next to the credit it draws. */
+:root {
+  --squiggle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='4' viewBox='0 0 8 4'%3E%3Cpath d='M0 2Q2 0 4 2T8 2' fill='none' stroke='white' stroke-width='1.3' stroke-linecap='round'/%3E%3C/svg%3E");
+  --expo-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --wipe-duration: 620ms;
 }
 
 /*
-  The field is the gradient-ASCII plate, pinned to the viewport. It reaches the
-  margins, the header and the footer; the column covers the middle of it and
-  carries the two trim lines that bound the 3xl.
+  The window never scrolls: the middle of the sheet owns the scroll, so the
+  header and the footer stay where they are and the climb past either end of the
+  column stops at the column.
 */
-.site-field {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.sheet-body {
-  position: relative;
-  z-index: 1;
-  background: var(--anatomy-page);
-  box-shadow: inset 1px 0 0 var(--anatomy-lo), inset -1px 0 0 var(--anatomy-lo);
+html,
+body {
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
 /*
-  Repeated chrome (the wordmark, the theme toggle) precedes the page on every
-  route, so the first thing in the tab order is the way past it. It stays in the
-  a11y tree and comes in on focus, which is why it is opacity rather than
-  display.
+  Focus lands on <main> after a route change and from the skip link. It is a
+  container, not a control, so the ring would only trace the whole page. The
+  ring rule below is `.sheet :focus-visible`, which outranks a bare
+  `main:focus`, so both states have to be named or a route change paints a box
+  around the content.
 */
-.skip-link {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  z-index: 2;
-  padding: 7px 12px;
-  border: 1px solid var(--anatomy-mid);
-  border-radius: 2px;
-  background: var(--anatomy-card);
-  color: var(--anatomy-strong);
-  font-family: var(--anatomy-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  text-decoration: none;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.skip-link:focus-visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.sheet-eyebrow {
-  color: var(--anatomy-muted);
-  font-family: var(--anatomy-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-}
-
-.sheet-rule {
-  height: 1px;
-  background: var(--anatomy-mid);
-  border: 0;
-}
-
-/*
-  60–75 characters is the readable band; 58ch sat just under it and filled
-  little more than half the column. `pretty` keeps a lone last word off the line.
-*/
-.sheet-lede {
-  color: var(--anatomy-text);
-  max-width: 62ch;
-  text-wrap: pretty;
-}
-
-/* Small controls and chips, same hand as the figures */
-.sheet-log {
-  font-family: var(--anatomy-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.04em;
-  color: var(--anatomy-muted);
-  font-variant-numeric: tabular-nums;
-}
-
 .sheet :focus-visible {
   outline: 1px solid var(--anatomy-hi);
   outline-offset: 5px;
 }
 
-/* ——— The theme toggle: half discs trade places, the ring turns ——— */
-.theme-toggle {
-  flex: none;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  display: grid;
-  place-items: center;
-  border: 0;
-  border-radius: 999px;
-  background: #000;
-  cursor: pointer;
-  transition: transform 160ms var(--anatomy-ease);
-}
-/* hover only where a pointer can actually hover: a tap latches :hover */
-@media (hover: hover) {
-  .theme-toggle:hover {
-    transform: scale(1.06);
-  }
-}
-.theme-toggle:active {
-  transform: scale(0.96);
-}
-.theme-toggle svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-.theme-toggle-disc,
-.theme-toggle-ring {
-  transform-origin: 120px 120px;
-  transition: transform 350ms ease-in-out;
+main:focus,
+.sheet main:focus-visible {
+  outline: none;
 }
 
-/* ——— Theme wipe: a rectangle rising from the bottom, blurred ——— */
-:root {
-  --expo-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --wipe-duration: 620ms;
-}
-
+/* ——— Theme wipe: a rectangle rising from the bottom, blurred, and the toggle
+       turning with it ——— */
 ::view-transition-group(root) {
   animation-duration: var(--wipe-duration);
   animation-timing-function: var(--expo-out);
@@ -236,18 +147,55 @@
   }
 }
 
+/*
+  The toggle carries its own view-transition name, which lifts it out of the
+  root snapshot. Without that it would only be part of the picture the wipe
+  reveals, and its turn would happen behind the snapshot; with it, the toggle
+  turns over the top while the background sweeps past, and the two read as one
+  gesture. The turn itself is the wipe's, so the discs drop their own transition
+  wherever a view transition exists (see the toggle's markup).
+*/
+::view-transition-group(theme-toggle) {
+  animation-duration: var(--wipe-duration);
+  animation-timing-function: var(--expo-out);
+}
+
+::view-transition-old(theme-toggle) {
+  animation: none;
+}
+
+html[data-theme="light"]::view-transition-new(theme-toggle) {
+  animation-name: turn-in;
+}
+
+html[data-theme="dark"]::view-transition-new(theme-toggle) {
+  animation-name: turn-back;
+}
+
+/* -180deg to 0deg is the same clockwise turn the discs make */
+@keyframes turn-in {
+  from {
+    transform: rotate(-180deg);
+  }
+}
+
+@keyframes turn-back {
+  from {
+    transform: rotate(180deg);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(root) {
+  ::view-transition-group(root),
+  ::view-transition-group(theme-toggle) {
     animation: none;
   }
   /* movement becomes a cross-fade rather than an instant cut */
   ::view-transition-new(root) {
     animation: reveal-fade 150ms ease-out;
   }
-  .theme-toggle,
-  .theme-toggle-disc,
-  .theme-toggle-ring {
-    transition: none;
+  ::view-transition-new(theme-toggle) {
+    animation: none;
   }
 }
 
@@ -270,7 +218,7 @@
   page and leave dark mode alone. Scoped to the install block: the drawings keep
   the kit's own ramp.
 */
-.sheet[data-theme="light"] .install {
+[data-theme="light"] .install {
   --anatomy-faint: #e9e9e4;
   --anatomy-lo: #d9d9d3;
 }
@@ -287,126 +235,50 @@
   --radius-2xl: 2px;
 }
 
-/* the manual tab swaps a one-line placeholder for a tall block: hold the space */
-.install-code-slot {
-  min-height: 8rem;
+/* ——— the drawing, once it sits on the sheet ———
+   The kit's stylesheet is plain CSS because it ships with the component, so the
+   rules that reshape it for the sheet are plain too. */
+/* the plates take their padding from the viewport; a card is not the viewport */
+.figure-card .the-zip {
+  --the-zip-pad: 18px;
 }
 
-.install-code-slot > * {
-  animation: install-fade 150ms ease-out;
+.figure-card .the-turntable {
+  --the-turntable-pad: 18px;
 }
 
-@keyframes install-fade {
-  from {
-    opacity: 0;
-  }
-}
-
-/* ——— site chrome ——— */
 /*
-  Focus lands on <main> after a route change and from the skip link. It is a
-  container, not a control, so the ring would only trace the whole page.
+  Cards are one size, so they draw into one box. This is the turntable's own
+  proportion: it fills that box exactly, and the zip's wider drawing fits across
+  it. Both figures read their pointer position off the frame, so keeping the box
+  the same shape as the widest viewBox keeps those maps honest.
 */
-main:focus {
-  outline: none;
+.figure-card .iso-stage {
+  aspect-ratio: 640 / 420;
 }
 
-.site-mark {
-  color: var(--anatomy-strong);
-  text-decoration: none;
-}
-
-.site-mark-cn {
-  color: var(--site-blue);
-}
-
-.site-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--anatomy-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--anatomy-muted);
-  text-decoration: none;
-  transition: color 160ms var(--anatomy-ease);
-}
-
-@media (hover: hover) {
-  .site-back:hover {
-    color: var(--anatomy-strong);
-  }
-}
-
-.site-credit {
-  color: inherit;
-  text-decoration: underline;
-  text-decoration-color: var(--anatomy-mid);
-  text-underline-offset: 3px;
-  transition: color 160ms var(--anatomy-ease), text-decoration-color 160ms var(--anatomy-ease);
-}
-
-@media (hover: hover) {
-  .site-credit:hover {
-    color: var(--site-blue);
-    text-decoration-color: var(--site-blue);
-  }
-}
-
-/* file marks for the manual file tree (svgl.app art in public/file-icons) */
-.ft-icon {
-  display: block;
-  width: 14px;
-  height: 14px;
-}
-
-.ft-icon img {
-  display: block;
-  width: 100%;
+.figure-card .iso-svg {
   height: 100%;
 }
 
-.ft-icon-light {
-  display: none;
-}
-
-.sheet[data-theme="light"] .ft-icon-light {
-  display: block;
-}
-
-.sheet[data-theme="light"] .ft-icon-dark {
-  display: none;
-}
-
-/* ——— the landing grid ——— */
-/* No margin reset here: this file is unlayered, so a `margin: 0` would beat the
-   Tailwind spacing utility on the same element. Preflight already clears it. */
-.figure-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 24px 20px;
-}
-
 /*
-  The card is one link. The link is the title, and its ::after stretches the hit
-  area over the whole card, so the figure's play/pause control can stay a real
-  control instead of a button nested inside an anchor.
+  The sheet draws its hairlines in one tone: the rule under the header, the rule
+  over the footer, the two edges down the column and the ring around a plate.
+  The kit frames a plate in `--anatomy-mid`; on the sheet it takes
+  `--anatomy-lo`, so the chrome reads as one grid instead of three greys. The
+  plate is already the boundary, which is why it only answers the pointer here.
 */
-.figure-card {
-  position: relative;
-  min-width: 0;
+.sheet .the-zip-plate,
+.sheet .the-turntable-plate {
+  box-shadow: 0 0 0 1px var(--anatomy-lo);
+  transition: box-shadow 180ms var(--anatomy-ease);
 }
 
-.figure-card-link {
-  color: inherit;
-  text-decoration: none;
-}
-
-.figure-card-link::after {
-  content: "";
-  position: absolute;
-  inset: 0;
+@media (hover: hover) {
+  .figure-card:hover .the-zip-plate,
+  .figure-card:hover .the-turntable-plate {
+    box-shadow: 0 0 0 1px var(--anatomy-hi);
+  }
 }
 
 /* the ring wraps the card, matching where the pointer activates */
@@ -419,89 +291,11 @@ main:focus {
   outline-offset: 5px;
 }
 
-/* the art sits above that hit area, and only its controls answer the pointer */
-.figure-card-art {
-  position: relative;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.figure-card-art .the-zip-control,
-.figure-card-art .the-turntable-control {
-  pointer-events: auto;
-}
-
-/* the plates take their padding from the viewport; a card is not the viewport */
-.figure-card .the-zip {
-  --the-zip-pad: 14px;
-}
-
-.figure-card .the-turntable {
-  --the-turntable-pad: 14px;
-}
-
-/* the plate is already the boundary; the card just lets it answer the pointer */
-.figure-card .the-zip-plate,
-.figure-card .the-turntable-plate {
-  transition: box-shadow 180ms var(--anatomy-ease);
-}
-
-.figure-card-text {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  padding: 12px 0 0;
-}
-
-.figure-card-name {
-  font-size: 15px;
-  line-height: 1.2;
-  color: var(--anatomy-strong);
-}
-
-.figure-card-tagline {
-  font-size: 0.75rem;
-  line-height: 1.55;
-  color: var(--anatomy-muted);
-  text-wrap: pretty;
-  transition: color 180ms var(--anatomy-ease);
-}
-
-@media (hover: hover) {
-  .figure-card-link:hover .the-zip-plate,
-  .figure-card-link:hover .the-turntable-plate {
-    box-shadow: 0 0 0 1px var(--anatomy-hi);
+@media (prefers-reduced-motion: reduce) {
+  .sheet .the-zip-plate,
+  .sheet .the-turntable-plate {
+    transition: none;
   }
-
-  .figure-card-link:hover .figure-card-tagline {
-    color: var(--anatomy-text);
-  }
-}
-
-/* ——— what a figure is for ——— */
-.use-list {
-  display: grid;
-  gap: 10px;
-}
-
-.use-list li {
-  position: relative;
-  padding-inline-start: 20px;
-  font-size: 0.8125rem;
-  line-height: 1.6;
-  color: var(--anatomy-text);
-}
-
-/* a small diamond, in the same hand as the drawings */
-.use-list li::before {
-  content: "";
-  position: absolute;
-  top: 7px;
-  inset-inline-start: 2px;
-  width: 6px;
-  height: 6px;
-  border: 1px solid var(--anatomy-mid);
-  rotate: 45deg;
 }
 
 /*
@@ -512,12 +306,3 @@ button:not(:disabled),
 [role="button"]:not([aria-disabled="true"]) {
   cursor: pointer;
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .figure-card .the-zip-plate,
-  .figure-card .the-turntable-plate,
-  .figure-card-tagline {
-    transition: none;
-  }
-}
-

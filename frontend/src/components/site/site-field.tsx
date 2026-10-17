@@ -20,7 +20,7 @@ export function SiteField({ theme }: { theme: Theme }) {
   const light = theme === "light";
 
   return (
-    <div className="site-field" aria-hidden="true">
+    <div className="pointer-events-none fixed inset-0 z-0" aria-hidden="true">
       <GradientASCII
         colors={RAMP[light ? "light" : "dark"]}
         shape="horizon"
