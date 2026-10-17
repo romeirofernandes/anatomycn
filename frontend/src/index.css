@@ -85,9 +85,55 @@
    markup next to the credit it draws. */
 :root {
   --squiggle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='4' viewBox='0 0 8 4'%3E%3Cpath d='M0 2Q2 0 4 2T8 2' fill='none' stroke='white' stroke-width='1.3' stroke-linecap='round'/%3E%3C/svg%3E");
-  /* the dissolve: one second, eased in and out, the way its shader runs */
-  --dissolve-duration: 1000ms;
-  --dissolve-ease: cubic-bezier(0.45, 0, 0.55, 1);
+  /* The one blue the chrome is allowed to use: the wordmark's `cn`, the field's
+     ceiling, and the ring a card answers the pointer with. The drawings keep the
+     kit's own `--anatomy-blue`, which is a different hue. */
+  --site-blue: #38bdf8;
+}
+
+html[data-theme="dark"] {
+  --site-blue: #38bdf8;
+}
+
+html[data-theme="light"] {
+  --site-blue: #1e3fd8;
+}
+
+/*
+  Scrollbars: six pixels, and invisible until the pointer is over the thing that
+  scrolls, so the only chrome on the sheet is its own hairlines. Blink and WebKit
+  take the pseudo-elements; the standard properties are fenced off for Firefox,
+  because Chrome drops the pseudo-element rules the moment `scrollbar-width` is
+  anything but `auto`.
+*/
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 999px;
+}
+
+*:hover::-webkit-scrollbar-thumb {
+  background: var(--anatomy-lo);
+}
+
+@supports (-moz-appearance: none) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  *:hover {
+    scrollbar-color: var(--anatomy-lo) transparent;
+  }
 }
 
 /*
@@ -118,88 +164,58 @@ main:focus,
   outline: none;
 }
 
-/* ——— The theme dissolve ———
-   Lifted from the theme transition in romeirofernandes/me. There, the incoming
-   theme comes through a threshold that opens from the middle of the window and
-   grows past the corners: the outgoing picture loses its colour as it comes
-   apart, the incoming one arrives black and grey and colours in as it lands,
-   and the whole thing takes one second, eased in and out.
-
-   The one thing that had to change is what is being dissolved. That transition
-   holds two photographs, so it holds two textures and runs them through a
-   shader; a page has no photograph of itself to hand, but the view transition
-   already takes its own two pictures, so the same maths runs as a mask on the
-   incoming one. Same threshold, same second, same greying, same arrival out of
-   black, one shader and two photographs fewer. */
-@property --dissolve-edge {
-  syntax: "<percentage>";
-  inherits: false;
-  initial-value: 0%;
-}
-
-::view-transition-group(root) {
-  animation-duration: var(--dissolve-duration);
-  animation-timing-function: var(--dissolve-ease);
-}
-
-/* The outgoing sheet sits under the incoming one and stays whole, which is what
-   makes a mask on the incoming side a reveal of the old page instead of a hole
-   in it. It only loses its colour, on the shader's own curve: full grey by the
-   time the threshold is a third of the way across. */
+/* The new theme slides in as a blurred panel. Dark enters from the bottom;
+   light enters from the top. The old snapshot stays still underneath. */
 ::view-transition-old(root) {
-  animation: dissolve-away var(--dissolve-duration) var(--dissolve-ease) both;
+  animation: none;
   z-index: -1;
 }
 
-/* The threshold's edge is soft by five percent of its own radius, which is the
-   shader's 0.03 of the frame's diagonal, and it ends past the corners: the
-   diagonal is 100%. */
-::view-transition-new(root) {
-  mask-image: radial-gradient(
-    circle at 50% 50%,
-    #000 calc(var(--dissolve-edge) - 2.5%),
-    transparent var(--dissolve-edge)
-  );
-  animation: dissolve-in var(--dissolve-duration) var(--dissolve-ease) both;
+html[data-theme="dark"]::view-transition-new(root) {
+  will-change: clip-path, filter;
+  animation: theme-reveal-bottom-up 850ms cubic-bezier(0.45, 0, 0.55, 1) both;
 }
 
-@keyframes dissolve-away {
+html[data-theme="light"]::view-transition-new(root) {
+  will-change: clip-path, filter;
+  animation: theme-reveal-top-down 850ms cubic-bezier(0.45, 0, 0.55, 1) both;
+}
+
+@keyframes theme-reveal-bottom-up {
   from {
-    filter: grayscale(0);
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    filter: blur(8px);
   }
-  40% {
-    filter: grayscale(1);
+  50% {
+    filter: blur(4px);
   }
   to {
-    filter: grayscale(1);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    filter: blur(0);
   }
 }
 
-/* from black, not from nothing: the second plane in the shader starts at
-   zero brightness and greyscale, and colours in as the threshold passes */
-@keyframes dissolve-in {
+@keyframes theme-reveal-top-down {
   from {
-    --dissolve-edge: 0%;
-    filter: brightness(0) grayscale(1);
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+    filter: blur(8px);
+  }
+  50% {
+    filter: blur(4px);
   }
   to {
-    --dissolve-edge: 118%;
-    filter: brightness(1) grayscale(0);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    filter: blur(0);
   }
 }
 
 /*
-  The toggle carries its own view-transition name, which lifts it out of the
-  root snapshot. Without that it would only be part of the picture the dissolve
-  reveals, and its turn would happen behind the snapshot; with it, the toggle
-  turns over the top while the threshold opens past it, and the two read as one
-  gesture. The turn takes the dissolve's own second and curve, so the discs drop
-  their own transition wherever a view transition exists (see the toggle's
-  markup).
+  The toggle has its own view-transition name, so its disc rotation stays above
+  the incoming panel.
 */
 ::view-transition-group(theme-toggle) {
-  animation-duration: var(--dissolve-duration);
-  animation-timing-function: var(--dissolve-ease);
+  animation-duration: 500ms;
+  animation-timing-function: ease-in-out;
 }
 
 ::view-transition-old(theme-toggle) {
@@ -228,18 +244,16 @@ html[data-theme="dark"]::view-transition-new(theme-toggle) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(root),
   ::view-transition-group(theme-toggle) {
     animation: none;
   }
-  /* movement becomes a cross-fade rather than an instant cut, so the threshold
-     and the greying both come off and the colour is the caller's own */
+  /* Use a short fade instead of the directional blur reveal. */
   ::view-transition-old(root) {
     animation: none;
   }
   ::view-transition-new(root) {
     animation: reveal-fade 150ms ease-out;
-    mask-image: none;
+    filter: none;
   }
   ::view-transition-new(theme-toggle) {
     animation: none;
@@ -337,7 +351,7 @@ html[data-theme="dark"]::view-transition-new(theme-toggle) {
 @media (hover: hover) {
   .figure-card:hover .the-zip-plate,
   .figure-card:hover .the-turntable-plate {
-    box-shadow: 0 0 0 1px var(--anatomy-hi);
+    box-shadow: 0 0 0 1px var(--site-blue);
   }
 }
 

@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 
 export type Theme = "dark" | "light";
@@ -24,6 +24,7 @@ function preferredTheme(): Theme {
  */
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>(preferredTheme);
+  const transitionInProgress = useRef(false);
 
   useLayoutEffect(() => {
     const root = document.documentElement;
@@ -31,20 +32,29 @@ export function useTheme() {
     root.style.colorScheme = theme;
   }, [theme]);
 
-  const toggle = useCallback(() => {
-    const next: Theme = theme === "dark" ? "light" : "dark";
-    window.localStorage.setItem(STORAGE_KEY, next);
+  const toggle = useCallback(async () => {
+    if (transitionInProgress.current) return;
+    transitionInProgress.current = true;
 
-    const doc = document as ViewTransitionDocument;
-    if (typeof doc.startViewTransition !== "function") {
-      setTheme(next);
-      return;
+    const next: Theme = theme === "dark" ? "light" : "dark";
+    try {
+      window.localStorage.setItem(STORAGE_KEY, next);
+
+      const doc = document as ViewTransitionDocument;
+      if (typeof doc.startViewTransition !== "function") {
+        setTheme(next);
+        return;
+      }
+
+      // Commit the new theme inside the transition's update callback so it
+      // becomes the incoming snapshot.
+      const transition = doc.startViewTransition(() => {
+        flushSync(() => setTheme(next));
+      });
+      await transition.finished;
+    } finally {
+      transitionInProgress.current = false;
     }
-    // flushSync commits inside the callback so the browser captures the new
-    // theme as the incoming snapshot of the wipe.
-    doc.startViewTransition(() => {
-      flushSync(() => setTheme(next));
-    });
   }, [theme]);
 
   return { theme, toggle };

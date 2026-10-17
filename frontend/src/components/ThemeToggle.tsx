@@ -6,14 +6,11 @@ type ThemeToggleProps = {
 };
 
 /*
-  The discs turn on their own, except where a view transition exists: there the
-  toggle is lifted out of the dissolve's snapshot (its view-transition name is
-  in index.css) and the dissolve turns it, so the two motions stay in step
-  instead of fighting over the same second. Either way the turn is one second
-  eased in and out, matching the threshold opening past it.
+  The discs turn on their own when view transitions are unavailable. Otherwise
+  the named view-transition group rotates them over the incoming panel.
 */
 const DISC =
-  "origin-[120px_120px] transition-transform duration-[1000ms] ease-[cubic-bezier(0.45,0,0.55,1)] " +
+  "origin-[120px_120px] transition-transform duration-[500ms] ease-in-out " +
   "supports-[view-transition-name:none]:transition-none motion-reduce:transition-none";
 
 /**
