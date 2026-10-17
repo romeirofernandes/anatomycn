@@ -1,0 +1,147 @@
+/* The Escalator — the framed plate the figure sits in, its play/pause control
+   and its corner readout. The drawing itself is styled by iso.css. */
+
+.the-escalator {
+  --the-escalator-pad: clamp(16px, 4.5vw, 34px);
+}
+
+.the-escalator-plate {
+  position: relative;
+  background: var(--anatomy-card);
+  /* the figure's solids are filled with --anatomy-paper, which has to match
+     the surface they are drawn on or every body shows a lighter rectangle */
+  --anatomy-paper: var(--anatomy-card);
+  box-shadow: 0 0 0 1px var(--anatomy-mid);
+  padding: var(--the-escalator-pad);
+}
+
+.the-escalator-stage {
+  outline: none;
+}
+
+/* the boxes leave over the roller table and run off the plate: clip them at
+   the frame rather than let them spill into the page */
+.the-escalator .iso-svg {
+  overflow: hidden;
+}
+
+/* the pointer is only a handle while the loop is stopped: it takes the band */
+.the-escalator-stage[data-interactive] {
+  cursor: grab;
+}
+
+.the-escalator-stage[data-interactive]:active {
+  cursor: grabbing;
+}
+
+/* the corner the flight leaves clear: it climbs away to the upper right, so
+   the top left of the frame is empty at every width */
+.the-escalator-control {
+  position: absolute;
+  top: calc(var(--the-escalator-pad) - 8px);
+  right: calc(var(--the-escalator-pad) - 8px);
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--anatomy-mid);
+  border-radius: 999px;
+  background: var(--anatomy-card);
+  color: var(--anatomy-hi);
+  cursor: pointer;
+  transition:
+    border-color 160ms var(--anatomy-ease),
+    color 160ms var(--anatomy-ease),
+    transform 160ms var(--anatomy-ease);
+}
+
+/* hover only where a pointer can hover: a tap latches :hover */
+@media (hover: hover) {
+  .the-escalator-control:hover {
+    border-color: var(--anatomy-hi);
+    color: var(--anatomy-strong);
+  }
+}
+
+.the-escalator-control:active {
+  transform: translateY(0.5px);
+}
+
+.the-escalator-control svg {
+  display: block;
+}
+
+/* the icon-swap recipe: both glyphs stay in the one cell and cross-fade, so the
+   swap is scale 0.25→1, blur 4px→0 over 300ms. No motion library needed. */
+.the-escalator-swap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+}
+
+.the-escalator-glyph {
+  grid-area: 1 / 1;
+  opacity: 0;
+  filter: blur(4px);
+  transform: scale(0.25);
+  transition:
+    opacity 300ms cubic-bezier(0.2, 0, 0, 1),
+    filter 300ms cubic-bezier(0.2, 0, 0, 1),
+    transform 300ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.the-escalator-glyph[data-on] {
+  opacity: 1;
+  filter: blur(0);
+  transform: scale(1);
+}
+
+/* The state in words is not written on the drawing: the drawing is the figure.
+   It stays in the DOM, off the page, so the slider's aria-valuetext has a text
+   twin and the readout can still be read by a test. */
+.the-escalator-readout {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* the handrail's joints: drawn where they stand, faded in and out at the ends */
+.the-escalator-joint {
+  transition: none;
+}
+
+.the-escalator :focus-visible {
+  outline: 1px solid var(--anatomy-hi);
+  outline-offset: 4px;
+}
+
+@media (max-width: 560px) {
+  .the-escalator-readout {
+    right: 0;
+    left: 0;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .the-escalator-control {
+    transition: none;
+  }
+  /* keep the fade, drop the movement */
+  .the-escalator-glyph,
+  .the-escalator-glyph[data-on] {
+    transition: opacity 150ms ease-out;
+    filter: none;
+    transform: none;
+  }
+}

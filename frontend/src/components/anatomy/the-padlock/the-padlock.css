@@ -1,0 +1,127 @@
+/* The Padlock — the framed plate the figure sits in, its readout, and the
+   play/pause control. The only chrome the figure needs; the drawing is styled
+   by iso.css. */
+
+.the-padlock {
+  --the-padlock-pad: clamp(16px, 4.5vw, 34px);
+}
+
+.the-padlock-plate {
+  position: relative;
+  background: var(--anatomy-card);
+  /* the figure's solids are filled with --anatomy-paper, which has to match
+     the surface they are drawn on or every body shows a lighter rectangle */
+  --anatomy-paper: var(--anatomy-card);
+  box-shadow: 0 0 0 1px var(--anatomy-mid);
+  padding: var(--the-padlock-pad);
+}
+
+.the-padlock-stage {
+  outline: none;
+}
+
+/* the pointer is only a handle while the tour is stopped: it scrubs the lock */
+.the-padlock-stage[data-interactive] {
+  cursor: ew-resize;
+}
+
+.the-padlock-stage[data-interactive]:active {
+  cursor: grabbing;
+}
+
+/* The state in words is not written on the drawing: the drawing is the figure.
+   It stays in the DOM, off the page, so the slider's aria-valuetext has a text
+   twin and the readout can still be read by a test. */
+.the-padlock-readout {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.the-padlock-control {
+  position: absolute;
+  top: calc(var(--the-padlock-pad) - 8px);
+  right: calc(var(--the-padlock-pad) - 8px);
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--anatomy-mid);
+  border-radius: 999px;
+  background: var(--anatomy-card);
+  color: var(--anatomy-hi);
+  cursor: pointer;
+  transition:
+    border-color 160ms var(--anatomy-ease),
+    color 160ms var(--anatomy-ease),
+    transform 160ms var(--anatomy-ease);
+}
+
+/* hover only where a pointer can hover: a tap latches :hover */
+@media (hover: hover) {
+  .the-padlock-control:hover {
+    border-color: var(--anatomy-hi);
+    color: var(--anatomy-strong);
+  }
+}
+
+.the-padlock-control:active {
+  transform: translateY(0.5px);
+}
+
+.the-padlock-control svg {
+  display: block;
+}
+
+/* the icon-swap recipe: both glyphs stay in the one cell and cross-fade, so the
+   swap is scale 0.25 -> 1, blur 4px -> 0 over 300ms. No motion library needed. */
+.the-padlock-swap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+}
+
+.the-padlock-glyph {
+  grid-area: 1 / 1;
+  opacity: 0;
+  filter: blur(4px);
+  transform: scale(0.25);
+  transition:
+    opacity 300ms cubic-bezier(0.2, 0, 0, 1),
+    filter 300ms cubic-bezier(0.2, 0, 0, 1),
+    transform 300ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.the-padlock-glyph[data-on] {
+  opacity: 1;
+  filter: blur(0);
+  transform: scale(1);
+}
+
+.the-padlock :focus-visible {
+  outline: 1px solid var(--anatomy-hi);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .the-padlock-control {
+    transition: none;
+  }
+  /* keep the fade, drop the movement */
+  .the-padlock-glyph,
+  .the-padlock-glyph[data-on] {
+    transition: opacity 150ms ease-out;
+    filter: none;
+    transform: none;
+  }
+}

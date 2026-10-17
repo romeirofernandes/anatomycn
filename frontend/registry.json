@@ -145,6 +145,171 @@
           "target": "@components/anatomy/live-solid.tsx"
         }
       ]
+    },
+    {
+      "name": "the-padlock",
+      "type": "registry:block",
+      "title": "The Padlock",
+      "description": "An isometric padlock in SVG. The shackle lifts clear of the two bores in the crown, swings open about its heel leg, and the keyway turns a quarter turn in the escutcheon; one number drives the lift, the swing and the turn. It runs its own tour with a play/pause control, and once paused you can scrub the lock or drive it with the arrow keys.",
+      "categories": ["svg", "isometric", "interactive"],
+      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "files": [
+        {
+          "path": "src/components/anatomy/the-padlock/the-padlock.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/the-padlock/the-padlock.tsx"
+        },
+        {
+          "path": "src/components/anatomy/the-padlock/padlock.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/the-padlock/padlock.ts"
+        },
+        {
+          "path": "src/components/anatomy/the-padlock/the-padlock.css",
+          "type": "registry:file",
+          "target": "@components/anatomy/the-padlock/the-padlock.css"
+        },
+        {
+          "path": "src/components/anatomy/iso-kit.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/iso-kit.ts"
+        },
+        {
+          "path": "src/components/anatomy/axis-parts.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/axis-parts.ts"
+        },
+        {
+          "path": "src/components/anatomy/iso.css",
+          "type": "registry:file",
+          "target": "@components/anatomy/iso.css"
+        },
+        {
+          "path": "src/components/anatomy/react/draw.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/react/draw.tsx"
+        },
+        {
+          "path": "src/components/anatomy/react/live.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/react/live.tsx"
+        },
+        {
+          "path": "src/components/anatomy/live-solid.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/live-solid.tsx"
+        }
+      ]
+    },
+    {
+      "name": "the-escalator",
+      "type": "registry:block",
+      "title": "The Escalator",
+      "description": "An isometric escalator in SVG. Six 30\u00b0 steps carry cardboard boxes up and out of sight under the landing while every pallet and both handrail bands advance as one, all from a single number. It runs its own loop with a play/pause control, and once paused you can scrub the band or drive it with the arrow keys.",
+      "categories": ["svg", "isometric", "interactive"],
+      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "files": [
+        {
+          "path": "src/components/anatomy/the-escalator/the-escalator.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/the-escalator/the-escalator.tsx"
+        },
+        {
+          "path": "src/components/anatomy/the-escalator/escalator.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/the-escalator/escalator.ts"
+        },
+        {
+          "path": "src/components/anatomy/the-escalator/the-escalator.css",
+          "type": "registry:file",
+          "target": "@components/anatomy/the-escalator/the-escalator.css"
+        },
+        {
+          "path": "src/components/anatomy/iso-kit.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/iso-kit.ts"
+        },
+        {
+          "path": "src/components/anatomy/axis-parts.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/axis-parts.ts"
+        },
+        {
+          "path": "src/components/anatomy/iso.css",
+          "type": "registry:file",
+          "target": "@components/anatomy/iso.css"
+        },
+        {
+          "path": "src/components/anatomy/react/draw.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/react/draw.tsx"
+        },
+        {
+          "path": "src/components/anatomy/react/live.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/react/live.tsx"
+        },
+        {
+          "path": "src/components/anatomy/live-solid.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/live-solid.tsx"
+        }
+      ]
+    },
+    {
+      "name": "the-scanner",
+      "type": "registry:block",
+      "title": "The Scanner",
+      "description": "An isometric baggage scanner in SVG. Parcels ride in on the belt, slide out of sight behind the tunnel's solid near wall, and come out the far side while the scan light sweeps the mouth; one number drives the belt, both carriers and the light. It runs its own loop with a play/pause control, and once paused you can scrub the belt or drive it with the arrow keys.",
+      "categories": ["svg", "isometric", "interactive"],
+      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "files": [
+        {
+          "path": "src/components/anatomy/the-scanner/the-scanner.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/the-scanner/the-scanner.tsx"
+        },
+        {
+          "path": "src/components/anatomy/the-scanner/scanner.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/the-scanner/scanner.ts"
+        },
+        {
+          "path": "src/components/anatomy/the-scanner/the-scanner.css",
+          "type": "registry:file",
+          "target": "@components/anatomy/the-scanner/the-scanner.css"
+        },
+        {
+          "path": "src/components/anatomy/iso-kit.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/iso-kit.ts"
+        },
+        {
+          "path": "src/components/anatomy/axis-parts.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/axis-parts.ts"
+        },
+        {
+          "path": "src/components/anatomy/iso.css",
+          "type": "registry:file",
+          "target": "@components/anatomy/iso.css"
+        },
+        {
+          "path": "src/components/anatomy/react/draw.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/react/draw.tsx"
+        },
+        {
+          "path": "src/components/anatomy/react/live.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/react/live.tsx"
+        },
+        {
+          "path": "src/components/anatomy/live-solid.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/live-solid.tsx"
+        }
+      ]
     }
   ]
 }

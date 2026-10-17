@@ -1,4 +1,7 @@
 import type * as React from "react";
+import { TheEscalator } from "@/components/anatomy/the-escalator/the-escalator";
+import { ThePadlock } from "@/components/anatomy/the-padlock/the-padlock";
+import { TheScanner } from "@/components/anatomy/the-scanner/the-scanner";
 import { TheTurntable } from "@/components/anatomy/the-turntable/the-turntable";
 import { TheZip } from "@/components/anatomy/the-zip/the-zip";
 
@@ -80,6 +83,81 @@ export const FIGURES: FigureEntry[] = [
       "@components/anatomy/live-solid.tsx",
     ],
     Figure: TheTurntable,
+  },
+  {
+    slug: "the-padlock",
+    name: "The Padlock",
+    tagline: "The shackle lifts clear, swings open, and the keyway turns.",
+    summary:
+      "A solid padlock on a bench. The shackle lifts clear of the two bores in the crown, swings open about its heel leg, and the keyway turns a quarter turn in the escutcheon. One number drives the lift, the swing and the turn, so the whole drawing is the same value seen three times. Pause it and the lock is yours to scrub.",
+    uses: [
+      "A security or encryption section that has to look like something",
+      "A locked feature, gated behind a plan",
+      "An onboarding step that seals the deal it just described",
+      "Anything that should read as shut, and be openable by hand",
+    ],
+    files: [
+      "@components/anatomy/the-padlock/the-padlock.tsx",
+      "@components/anatomy/the-padlock/padlock.ts",
+      "@components/anatomy/the-padlock/the-padlock.css",
+      "@components/anatomy/iso-kit.ts",
+      "@components/anatomy/axis-parts.ts",
+      "@components/anatomy/iso.css",
+      "@components/anatomy/react/draw.tsx",
+      "@components/anatomy/react/live.tsx",
+      "@components/anatomy/live-solid.tsx",
+    ],
+    Figure: ThePadlock,
+  },
+  {
+    slug: "the-escalator",
+    name: "The Escalator",
+    tagline: "A flight of steps that carry boxes up, and vanish at the top.",
+    summary:
+      "One 30° flight, six steps, and the load riding them. The band is drawn once and every pallet is placed by a screen translate read from a single number, so a step of the loop costs one attribute write. The boxes ride their own tread, so they sit square on the step at every phase, come in at the foot and are gone before the comb. Pause it and the band is yours to push by hand.",
+    uses: [
+      "An onboarding flow that has to look like progress, not a progress bar",
+      "A pipeline or build section, work climbing out of sight and reappearing",
+      "A pricing page where the load is what the plan carries",
+      "Anything that should read as steady, mechanical motion",
+    ],
+    files: [
+      "@components/anatomy/the-escalator/the-escalator.tsx",
+      "@components/anatomy/the-escalator/escalator.ts",
+      "@components/anatomy/the-escalator/the-escalator.css",
+      "@components/anatomy/iso-kit.ts",
+      "@components/anatomy/axis-parts.ts",
+      "@components/anatomy/iso.css",
+      "@components/anatomy/react/draw.tsx",
+      "@components/anatomy/react/live.tsx",
+      "@components/anatomy/live-solid.tsx",
+    ],
+    Figure: TheEscalator,
+  },
+  {
+    slug: "the-scanner",
+    name: "The Scanner",
+    tagline: "A belt, a tunnel, and a parcel that comes out the far side.",
+    summary:
+      "A benchtop inspection scanner: the belt runs, parcels ride in from the left and slide out of sight behind the near wall, the light sweeps the mouth, and they come out the far side square and clean. Nothing is cut away — the arch over the line is solid, and the wall hides the swap the way a real machine hides what is inside it. Pause it and the belt is yours to work by hand.",
+    uses: [
+      "A security, compliance or scanning section",
+      "An inspection step in a deploy or review flow",
+      "A logistics or fulfilment landing page",
+      "Anything that should read as something passing through a check",
+    ],
+    files: [
+      "@components/anatomy/the-scanner/the-scanner.tsx",
+      "@components/anatomy/the-scanner/scanner.ts",
+      "@components/anatomy/the-scanner/the-scanner.css",
+      "@components/anatomy/iso-kit.ts",
+      "@components/anatomy/axis-parts.ts",
+      "@components/anatomy/iso.css",
+      "@components/anatomy/react/draw.tsx",
+      "@components/anatomy/react/live.tsx",
+      "@components/anatomy/live-solid.tsx",
+    ],
+    Figure: TheScanner,
   },
 ];
 

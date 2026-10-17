@@ -321,6 +321,32 @@ html[data-theme="dark"]::view-transition-new(theme-toggle) {
   --the-turntable-pad: 18px;
 }
 
+.figure-card .the-padlock {
+  --the-padlock-pad: 18px;
+}
+
+.figure-card .the-escalator {
+  --the-escalator-pad: 18px;
+}
+
+.figure-card .the-scanner {
+  --the-scanner-pad: 18px;
+}
+
+/*
+  The play/pause control sits in the corner the drawing leaves empty, and it
+  sits in the same place on every card: one inset, whatever the plate's own
+  padding is, so the rings make a line down the sheet.
+*/
+.figure-card .the-zip-control,
+.figure-card .the-turntable-control,
+.figure-card .the-padlock-control,
+.figure-card .the-escalator-control,
+.figure-card .the-scanner-control {
+  top: 26px;
+  right: 26px;
+}
+
 /*
   Cards are one size, so they draw into one box. This is the turntable's own
   proportion: it fills that box exactly, and the zip's wider drawing fits across
@@ -343,14 +369,20 @@ html[data-theme="dark"]::view-transition-new(theme-toggle) {
   plate is already the boundary, which is why it only answers the pointer here.
 */
 .sheet .the-zip-plate,
-.sheet .the-turntable-plate {
+.sheet .the-turntable-plate,
+.sheet .the-padlock-plate,
+.sheet .the-escalator-plate,
+.sheet .the-scanner-plate {
   box-shadow: 0 0 0 1px var(--anatomy-lo);
   transition: box-shadow 180ms var(--anatomy-ease);
 }
 
 @media (hover: hover) {
   .figure-card:hover .the-zip-plate,
-  .figure-card:hover .the-turntable-plate {
+  .figure-card:hover .the-turntable-plate,
+  .figure-card:hover .the-padlock-plate,
+  .figure-card:hover .the-escalator-plate,
+  .figure-card:hover .the-scanner-plate {
     box-shadow: 0 0 0 1px var(--site-blue);
   }
 }
@@ -378,7 +410,10 @@ html[data-theme="dark"]::view-transition-new(theme-toggle) {
 
 @media (prefers-reduced-motion: reduce) {
   .sheet .the-zip-plate,
-  .sheet .the-turntable-plate {
+  .sheet .the-turntable-plate,
+  .sheet .the-padlock-plate,
+  .sheet .the-escalator-plate,
+  .sheet .the-scanner-plate {
     transition: none;
   }
 }
