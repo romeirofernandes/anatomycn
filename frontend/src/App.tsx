@@ -13,7 +13,31 @@ export default function App() {
   const path = usePathname();
   const entry = figureAt(path);
   const main = React.useRef<HTMLElement>(null);
+  const port = React.useRef<HTMLDivElement>(null);
   const shown = React.useRef(path);
+
+  /*
+    Only the middle of the column scrolls, so a wheel anywhere else — over the
+    header, over the footer, over the sheet beside the column — did nothing at
+    all. Hand those to the port, so the page answers wherever the pointer is. A
+    wheel already inside the port is left alone: that one is the browser's, and
+    it is the one that carries the momentum. A line or a page of delta is not a
+    pixel count, so it is scaled before it is added.
+  */
+  React.useEffect(() => {
+    const el = port.current;
+    if (!el) return;
+    const onWheel = (event: WheelEvent) => {
+      if (event.defaultPrevented || event.ctrlKey || event.shiftKey) return;
+      if (event.target instanceof Node && el.contains(event.target)) return;
+      if (el.scrollHeight <= el.clientHeight) return;
+      const step = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? el.clientHeight : 1;
+      event.preventDefault();
+      el.scrollTop += event.deltaY * step;
+    };
+    window.addEventListener("wheel", onWheel, { passive: false });
+    return () => window.removeEventListener("wheel", onWheel);
+  }, []);
 
   React.useEffect(() => {
     document.title = entry ? `${entry.name} · anatomycn` : "anatomycn";
@@ -57,7 +81,7 @@ export default function App() {
 
         <hr className="m-0 h-px shrink-0 border-0 bg-(--anatomy-lo)" />
 
-        <div className="min-h-0 flex-1 overflow-y-auto overscroll-none">
+        <div ref={port} className="min-h-0 flex-1 overflow-y-auto overscroll-none">
           <main id="main" className="px-5 sm:px-6" ref={main} tabIndex={-1}>
             {entry ? <FigurePage entry={entry} theme={theme} /> : <Landing theme={theme} />}
           </main>
