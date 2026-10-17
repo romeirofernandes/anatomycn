@@ -91,6 +91,19 @@
   --site-blue: #38bdf8;
 }
 
+/*
+  The base under everything. The sheet is transparent and the gradient field is
+  transparent at its dark end, so without this the browser's own canvas shows
+  through the margins - a light-mode #fff that turned #121212 once the theme
+  set `color-scheme: dark`, which is not a colour anyone chose. light-dark()
+  follows that same `color-scheme`, so it flips with the theme without a second
+  rule and without a flash on the light side.
+*/
+html {
+  background: #ffffff;
+  background: light-dark(#ffffff, #000000);
+}
+
 html[data-theme="dark"] {
   --site-blue: #38bdf8;
 }

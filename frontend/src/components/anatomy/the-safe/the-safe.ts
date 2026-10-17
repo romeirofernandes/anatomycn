@@ -91,16 +91,25 @@ const BACK_Y = 36;
 /** the raised frame the shut door seals onto */
 const FRAME = { x0: -84, x1: 84, z0: 34, z1: 178, out: 4 };
 
-/* ——— the door: one rigid panel across the front, hinged at the right ——— */
+/* ——— the door: one rigid panel across the front, hinged at the left ——— */
 export const DOOR = (() => {
   const y0 = FACE_Y + FRAME.out;
   const t = 14;
   return { x0: -82, x1: 82, y0, y1: y0 + t, z0: 38, z1: 174, t };
 })();
-/** the vertical line the door turns on: a barrel standing just off the
-    cabinet's front-left corner, so the swung door clears the shell and never
-    passes through it */
-export const HINGE: Plane = [DOOR.x0 - 14, DOOR.y1 + 2];
+/*
+  The vertical line the door turns on: a barrel on the door's own left-hand
+  edge, at the door's mid-thickness, the way a real door hangs off its knuckles.
+  The edge sits on the axis, so nothing bridges a gap and there is nothing to
+  read as a floating panel; the four units are the knuckle's own depth, out to
+  the pin.
+
+  Hung on the left, the door swings out and away to the reader's left, clear of
+  the opening: the chamber is never behind it. The price is that the door's
+  outer face crosses the camera's quarter partway open, and from there the
+  reader is looking at the door's inner face — see doorParts, which stocks it.
+*/
+export const HINGE: Plane = [DOOR.x0 - 4, (DOOR.y0 + DOOR.y1) / 2];
 const DOOR_W = DOOR.x1 - DOOR.x0;
 const DOOR_T = DOOR.t;
 const DOOR_H = DOOR.z1 - DOOR.z0;
@@ -118,9 +127,10 @@ const HANDLE_R = 20;
 
 export const SPIN_TURNS = 3;
 const DIAL_SPIN = SPIN_TURNS * TAU;
-/** how far the door swings: forward and to the left, so it stands clear of the
-    opening and the chamber is not hidden behind it. A door swings out of its
-    frame, not through it, so the free edge travels away from the shell. */
+/** How far the door swings. It hangs on the left, so this carries the free edge
+    out and away to the reader's left, clear of the opening: the chamber ends up
+    beside the door rather than behind it. A door swings out of its frame, not
+    through it, so the free edge travels away from the shell. */
 export const OPEN = 75 * RAD;
 /** how far the bolts ride out of the door's edges */
 const BOLT_STROKE = 10;
@@ -330,8 +340,18 @@ CAVITY_PARTS.push(part(block(-70, -12, 62, 78, 139, 141), "mid"));
 CAVITY_PARTS.push(part(block(-70, -12, 62, 66, 141, 152), "mid"));
 CAVITY_PARTS.push(part(block(-14, -12, 62, 78, 141, 152), "mid"));
 
-/* ——— the door, rebuilt every frame ——— */
-export const DOOR_STYLE: Array<Pick<Part, "tone" | "crease" | "lit" | "mark">> = [
+/* ——— the door, rebuilt every frame ———
+   `face` marks the parts that belong to one skin of the door: `outer` for the
+   dial, the plate and the handle on the outside, `inner` for the boltwork on
+   the inside. The reader only ever sees one of the two skins, so the styles are
+   the door's whole wardrobe and the view fades one set out as the other comes
+   round. Parts with no `face` — the bolts in the edges, the panel, the hinge —
+   belong to the door itself and are always on. */
+export interface DoorStyle extends Pick<Part, "tone" | "crease" | "lit" | "mark"> {
+  face?: "outer" | "inner";
+}
+
+export const DOOR_STYLE: DoorStyle[] = [
   { tone: "mid", crease: "faint", lit: false }, // bolt
   { tone: "mid", crease: "faint", lit: false }, // bolt
   { tone: "mid", crease: "faint", lit: false }, // bolt
@@ -340,27 +360,31 @@ export const DOOR_STYLE: Array<Pick<Part, "tone" | "crease" | "lit" | "mark">> =
   { tone: "hi", crease: "none", lit: false }, // bolt lug
   { tone: "hi", crease: "none", lit: false }, // bolt lug
   { tone: "hi", crease: "none", lit: false }, // bolt lug
+  { tone: "mid", crease: "faint", lit: false, face: "inner" }, // boltwork: the top bar
+  { tone: "mid", crease: "faint", lit: false, face: "inner" }, // boltwork: the bottom bar
+  { tone: "mid", crease: "faint", lit: false, face: "inner" }, // boltwork: the spine
+  { tone: "mid", crease: "faint", lit: false, face: "inner" }, // boltwork: the spindle boss
   { tone: "hi", crease: "faint", lit: false }, // the panel
-  { tone: "mid", crease: "faint", lit: false }, // its raised face
-  { tone: "mid", crease: "none", lit: false }, // corner bolt
-  { tone: "mid", crease: "none", lit: false }, // corner bolt
-  { tone: "mid", crease: "none", lit: false }, // corner bolt
-  { tone: "mid", crease: "none", lit: false }, // corner bolt
-  { tone: "mid", crease: "faint", lit: false }, // the graduation plate
-  { tone: "mid", crease: "faint", lit: true }, // the index: the one accent
-  { tone: "hi", crease: "faint", lit: false }, // the dial
-  { tone: "mid", crease: "faint", lit: false }, // its hub
-  { tone: "mid", crease: "faint", lit: false }, // the handle's boss
-  { tone: "hi", crease: "faint", lit: false }, // the wheel
-  { tone: "hi", crease: "none", lit: false }, // spoke
-  { tone: "mid", crease: "faint", lit: false }, // its bob-weight
-  { tone: "hi", crease: "none", lit: false }, // spoke
-  { tone: "mid", crease: "faint", lit: false }, // its bob-weight
-  { tone: "hi", crease: "none", lit: false }, // spoke
-  { tone: "mid", crease: "faint", lit: false }, // its bob-weight
-  { tone: "mid", crease: "faint", lit: false }, // the handle's hub
-  { tone: "mid", crease: "faint", lit: false }, // hinge web
-  { tone: "mid", crease: "faint", lit: false }, // hinge web
+  { tone: "mid", crease: "faint", lit: false, face: "outer" }, // its raised face
+  { tone: "mid", crease: "none", lit: false, face: "outer" }, // corner bolt
+  { tone: "mid", crease: "none", lit: false, face: "outer" }, // corner bolt
+  { tone: "mid", crease: "none", lit: false, face: "outer" }, // corner bolt
+  { tone: "mid", crease: "none", lit: false, face: "outer" }, // corner bolt
+  { tone: "mid", crease: "faint", lit: false, face: "outer" }, // the graduation plate
+  { tone: "mid", crease: "faint", lit: true, face: "outer" }, // the index: the one accent
+  { tone: "hi", crease: "faint", lit: false, face: "outer" }, // the dial
+  { tone: "mid", crease: "faint", lit: false, face: "outer" }, // its hub
+  { tone: "mid", crease: "faint", lit: false, face: "outer" }, // the handle's boss
+  { tone: "hi", crease: "faint", lit: false, face: "outer" }, // the wheel
+  { tone: "hi", crease: "none", lit: false, face: "outer" }, // spoke
+  { tone: "mid", crease: "faint", lit: false, face: "outer" }, // its bob-weight
+  { tone: "hi", crease: "none", lit: false, face: "outer" }, // spoke
+  { tone: "mid", crease: "faint", lit: false, face: "outer" }, // its bob-weight
+  { tone: "hi", crease: "none", lit: false, face: "outer" }, // spoke
+  { tone: "mid", crease: "faint", lit: false, face: "outer" }, // its bob-weight
+  { tone: "mid", crease: "faint", lit: false, face: "outer" }, // the handle's hub
+  { tone: "mid", crease: "faint", lit: false }, // hinge knuckle
+  { tone: "mid", crease: "faint", lit: false }, // hinge knuckle
   { tone: "mid", crease: "none", lit: false }, // hinge barrel
   { tone: "mid", crease: "none", lit: false }, // hinge barrel
 ];
@@ -386,8 +410,22 @@ export function doorParts(phi: number, _spin: number, turn: number): SolidPaths[
     }
   }
 
+  /* What the door shows when it stands open: the boltwork on its inner face — a
+     bar out to the bolts at either edge, a spine between the bars, and the boss
+     the spindle turns in. It rides behind the panel, so it is out of sight
+     while the door is shut and in the aperture, and it is what the reader gets
+     once the swing has carried the outer face past the camera's quarter. */
+  for (const [z0, z1] of [
+    [DOOR.z1 - 24, DOOR.z1 - 16],
+    [DOOR.z0 + 16, DOOR.z0 + 24],
+  ] as Plane[]) {
+    put(frameAlong([-BOLT_X - 6, DOOR.y0 - 3, (z0 + z1) / 2], [BOLT_X + 6, DOOR.y0 - 3, (z0 + z1) / 2]), rectSection(6, z1 - z0), 0, 2 * BOLT_X + 12);
+  }
+  put(frameAlong([0, DOOR.y0 - 3, DOOR.z0 + 20], [0, DOOR.y0 - 3, DOOR.z1 - 20]), rectSection(6, 8), 0, DOOR.z1 - DOOR.z0 - 40);
+  put(frameAlong([0, DOOR.y0, DOOR_MZ], [0, DOOR.y0 - 14, DOOR_MZ]), circleSection(11, 24), 0, 14, false);
+
   put(frameAlong([DOOR.x0, DOOR_MY, DOOR_MZ], [DOOR.x1, DOOR_MY, DOOR_MZ]), rectSection(DOOR_T, DOOR_H), 0, DOOR_W);
-  put(face(0, DOOR_MZ, 0), faceRect(74, 60, [0, DOOR_MZ]), 0, 3);
+  put(face(0, DOOR_MZ, 0), faceRect(74, 60), 0, 3);
   for (const [across, up] of [
     [-66, 60],
     [66, 60],
@@ -412,28 +450,29 @@ export function doorParts(phi: number, _spin: number, turn: number): SolidPaths[
     put(face(at[0], at[1], 11), faceDisc(4.4, 14), 0, 6, false);
   }
   put(face(HANDLE[0], HANDLE[1], 11), faceDisc(7, 20), 0, 7, false);
-  /* the hinge: two webs out to the barrel, and the door's own knuckles */
+  /* the hinge: two knuckles out to the barrel, and the door's own barrel too */
   for (const [z0, z1] of [
     [86, 106],
     [136, 156],
   ] as Plane[]) {
-    put(frameAlong([DOOR.x0, DOOR_MY, (z0 + z1) / 2], [HINGE[0], DOOR_MY, (z0 + z1) / 2]), rectSection(DOOR_T, z1 - z0), 0, DOOR.x0 - HINGE[0]);
+    put(frameAlong([DOOR.x0, DOOR_MY, (z0 + z1) / 2], [HINGE[0], DOOR_MY, (z0 + z1) / 2]), rectSection(DOOR_T, z1 - z0), 0, Math.abs(DOOR.x0 - HINGE[0]));
     put(frameAlong([HINGE[0], HINGE[1], z0], [HINGE[0], HINGE[1], z1]), circleSection(6, 18), 0, z1 - z0, false);
   }
   return out;
 }
 
-export function doorLines(phi: number, spin: number): Array<{ d: string; tone: LineTone }> {
+export function doorLines(phi: number, spin: number): Array<{ d: string; tone: LineTone; face?: "outer" | "inner" }> {
   const at = (points: Point3[]) => pathOf(pointsAt(points.map((point) => swung(point, phi)), P));
   const onCap = (radius: number, angle: number): Point3 => [DIAL[0] + radius * Math.sin(angle), DOOR.y1 + CAP_OUT + 0.3, DIAL[1] + radius * Math.cos(angle)];
-  const ring = (centre: Plane, radius: number, out: number, steps = 44) => {
+  const ringAt = (centre: Plane, radius: number, y: number, steps = 44) => {
     const points: Point3[] = [];
     for (let index = 0; index < steps; index++) {
       const t = (index / steps) * TAU;
-      points.push([centre[0] + radius * Math.sin(t), DOOR.y1 + out, centre[1] + radius * Math.cos(t)]);
+      points.push([centre[0] + radius * Math.sin(t), y, centre[1] + radius * Math.cos(t)]);
     }
     return at(points);
   };
+  const ring = (centre: Plane, radius: number, out: number, steps = 44) => ringAt(centre, radius, DOOR.y1 + out, steps);
   const minor: string[] = [];
   const major: string[] = [];
   for (let index = 0; index < 60; index++) {
@@ -441,53 +480,75 @@ export function doorLines(phi: number, spin: number): Array<{ d: string; tone: L
     (index % 5 === 0 ? major : minor).push(at([onCap(20, angle), onCap(29.6, angle)]));
   }
   return [
-    { d: minor.join(""), tone: "faint" },
-    { d: major.join(""), tone: "lo" },
-    { d: ring(DIAL, 20, CAP_OUT + 0.3), tone: "faint" },
-    { d: ring(DIAL, 14, CAP_OUT + 0.3), tone: "faint" },
-    { d: ring(DIAL, 7, CAP_OUT + 6.3), tone: "faint" },
-    { d: ring(HANDLE, 19, 11.3), tone: "faint" },
-    { d: ring(HANDLE, 7, 18.3), tone: "faint" },
+    { d: minor.join(""), tone: "faint", face: "outer" },
+    { d: major.join(""), tone: "lo", face: "outer" },
+    { d: ring(DIAL, 20, CAP_OUT + 0.3), tone: "faint", face: "outer" },
+    { d: ring(DIAL, 14, CAP_OUT + 0.3), tone: "faint", face: "outer" },
+    { d: ring(DIAL, 7, CAP_OUT + 6.3), tone: "faint", face: "outer" },
+    { d: ring(HANDLE, 19, 11.3), tone: "faint", face: "outer" },
+    { d: ring(HANDLE, 7, 18.3), tone: "faint", face: "outer" },
+    { d: ringAt([0, DOOR_MZ], 11, DOOR.y0 - 14, 24), tone: "faint", face: "inner" },
   ];
 }
 
 /* ——— the paint order of the door ———
-   Every door part is a sheet lying on the panel, so which one covers which is
-   settled by how far it stands off the door's outer face. While that face is
-   turned toward the camera the smallest offset goes down first; once the swing
-   has carried it past the camera's quarter the order reverses and the door's
-   inner face takes the front. The ink rides in the same list, so the dial's
-   graduations fall behind the panel exactly when the dial does. */
-export const DOOR_DEPTH: number[] = [
-  0, 0, 0, 0, // bolts
-  0, 0, 0, 0, // bolt lugs
-  -7, // the panel
-  1.5, // its raised face
-  5.5, 5.5, 5.5, 5.5, // corner bolts
-  4.5, // the graduation plate
-  4.7, // the index: the one accent
-  10.5, // the dial
-  18, // its hub
-  5, // the handle's boss
-  9, // the wheel
-  13.5, // spoke
-  14, // its bob-weight
-  13.5, // spoke
-  14, // its bob-weight
-  13.5, // spoke
-  14, // its bob-weight
-  14.5, // the handle's hub
-  0, 0, // hinge webs
-  0, 0, // hinge barrels
-];
-export const DOOR_INK_DEPTH: number[] = [15.35, 15.35, 15.3, 15.3, 21.3, 11.3, 18.3];
-const DOOR_SLOTS: number[] = [...DOOR_DEPTH, ...DOOR_INK_DEPTH];
+   Every door part is a sheet lying on or against the panel, so which one covers
+   which is settled by the panel: the bolts in the door's edges ride behind it,
+   the corner bolts and hinge stand clear of it, and of the two skins — the
+   dial, the plate and the handle outside, the boltwork inside — only the one
+   turned to the reader belongs in front of it.
 
-/** the slot at each place of the painting order: the solids first, then the ink */
-export function doorOrder(phi: number): number[] {
-  const inner = Math.cos(phi) - Math.sin(phi) < 0;
-  return DOOR_SLOTS.map((_, slot) => slot).sort((a, b) => (inner ? DOOR_SLOTS[b]! - DOOR_SLOTS[a]! : DOOR_SLOTS[a]! - DOOR_SLOTS[b]!));
+   The door's panel turns edge-on a quarter of the way round the swing, and that
+   is exactly the angle at which it takes the far skin out of sight. So the two
+   skins swap places there and nowhere else, and the change is the occlusion
+   itself: no fade, and the part of a knob that reaches past the door's edge is
+   still there to be seen. */
+const DOOR_RUNS = (() => {
+  const inside: number[] = [];
+  const outside: number[] = [];
+  const rest: number[] = [];
+  DOOR_STYLE.forEach((style, slot) => {
+    if (style.face === "inner") inside.push(slot);
+    else if (style.face === "outer") outside.push(slot);
+    else rest.push(slot);
+  });
+  return {
+    bolts: rest.filter((slot) => slot < Math.min(...inside)),
+    panel: rest.filter((slot) => slot > Math.max(...inside) && slot < Math.min(...outside)),
+    hinge: rest.filter((slot) => slot > Math.max(...outside)),
+    inside,
+    outside,
+  };
+})();
+
+/** the angle the door's panel turns edge-on at: a quarter of the way round */
+export const DOOR_EDGE_ON = Math.PI / 4;
+
+/** a run of the door's parts, and the ink that rides on top of the run */
+export interface DoorLayer {
+  slots: number[];
+  ink: "outer" | "inner" | null;
 }
+
+/** the door's parts in the order they are painted, furthest from the reader
+    first: one list for the door standing with its outer face to the reader, one
+    for standing with its inner face there */
+export const DOOR_LAYERS: { outward: DoorLayer[]; inward: DoorLayer[] } = {
+  outward: [
+    { slots: DOOR_RUNS.bolts, ink: null },
+    { slots: DOOR_RUNS.inside, ink: "inner" },
+    { slots: DOOR_RUNS.panel, ink: null },
+    { slots: DOOR_RUNS.outside, ink: "outer" },
+    { slots: DOOR_RUNS.hinge, ink: null },
+  ],
+  inward: [
+    { slots: DOOR_RUNS.bolts, ink: null },
+    { slots: DOOR_RUNS.outside, ink: "outer" },
+    { slots: DOOR_RUNS.panel, ink: null },
+    { slots: DOOR_RUNS.inside, ink: "inner" },
+    { slots: DOOR_RUNS.hinge, ink: null },
+  ],
+};
 
 /* ——— the tour: locked, dial, throw, swing open, hold, swing shut, throw back ——— */export interface Pose {
   /** how far the dial stands off its graduation, in radians */

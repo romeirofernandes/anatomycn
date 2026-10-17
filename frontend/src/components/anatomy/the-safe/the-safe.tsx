@@ -12,6 +12,8 @@ import {
   CAVITY_CLIP,
   CAVITY_LINES,
   CAVITY_PARTS,
+  DOOR_EDGE_ON,
+  DOOR_LAYERS,
   DOOR_STYLE,
   HALO,
   HEIGHT,
@@ -25,6 +27,7 @@ import {
   progressFor,
   stateText,
   tourAt,
+  type DoorLayer,
   type Pose,
 } from "./the-safe";
 import "./the-safe.css";
@@ -92,6 +95,9 @@ export function TheSafe({ theme = "dark", className, playing: controlled, defaul
   const readout = React.useRef<HTMLSpanElement | null>(null);
   const doorHandles = React.useMemo(() => DOOR_STYLE.map(() => React.createRef<SolidHandle>()), []);
   const lineRefs = React.useMemo(() => LINE_OPENING.map(() => React.createRef<SVGPathElement>()), []);
+  /** which face of the door the reader has: false while the outer face is to them */
+  const [inward, setInward] = React.useState(OPENING.swing > DOOR_EDGE_ON);
+  const facingIn = React.useRef(inward);
   const frame = React.useRef(0);
   const last = React.useRef(0);
   const grab = React.useRef(0);
@@ -113,6 +119,19 @@ export function TheSafe({ theme = "dark", className, playing: controlled, defaul
     for (let index = 0; index < lines.length; index++) {
       const node = lineRefs[index]?.current;
       if (node && node.getAttribute("d") !== lines[index]!.d) node.setAttribute("d", lines[index]!.d);
+    }
+
+    /* The door's two skins take turns. While its outer face stands to the reader
+       the dial and the handle are what is seen; once the swing has carried that
+       face past the panel's edge the reader is looking at the door's inner
+       face, and then it is the boltwork that is seen. The panel turns edge-on at
+       a quarter of the swing, so that is where the skins swap places in the
+       paint order — the swap is the occlusion itself, and it happens twice in a
+       turn of the tour, not once a frame. */
+    const inFacing = s.pose.swing > DOOR_EDGE_ON;
+    if (facingIn.current !== inFacing) {
+      facingIn.current = inFacing;
+      setInward(inFacing);
     }
 
     const text = stateText(s.pose);
@@ -195,6 +214,29 @@ export function TheSafe({ theme = "dark", className, playing: controlled, defaul
     s.pose = poseAt(1);
     paint();
   }, [stillness, paint]);
+
+  /* The door is laid out in one of two orders, so the only thing a change of
+     face costs is the swap itself: the parts, and the paths the frame writes
+     into, are the same either way. */
+  const layers = React.useMemo(() => {
+    const build = (list: DoorLayer[]) =>
+      list.flatMap((layer) => [
+        ...layer.slots.map((slot) => (
+          <LiveSolid
+            key={`door${slot}`}
+            paths={DOOR_OPENING[slot]!}
+            handle={doorHandles[slot]}
+            tone={DOOR_STYLE[slot]!.tone}
+            crease={DOOR_STYLE[slot]!.crease}
+            lit={DOOR_STYLE[slot]!.lit}
+          />
+        )),
+        ...LINE_OPENING.flatMap((item, at) =>
+          (item.face ?? "outer") === layer.ink ? [<path key={`doorink${at}`} ref={lineRefs[at]} className="iso-line" data-tone={item.tone} d={item.d} />] : [],
+        ),
+      ]);
+    return { outward: build(DOOR_LAYERS.outward), inward: build(DOOR_LAYERS.inward) };
+  }, [doorHandles, lineRefs]);
 
   /** the pointer reads across the frame: nought at the left, one at the right */
   const valueAt = (clientX: number) => {
@@ -301,19 +343,9 @@ export function TheSafe({ theme = "dark", className, playing: controlled, defaul
 
             {/* the door, rebuilt whole every frame: its solids first, so the
                 retracted bolts hide behind the panel, then its ink */}
-            {DOOR_OPENING.map((paths, index) => (
-              <LiveSolid
-                key={`door${index}`}
-                paths={paths}
-                handle={doorHandles[index]}
-                tone={DOOR_STYLE[index]!.tone}
-                crease={DOOR_STYLE[index]!.crease}
-                lit={DOOR_STYLE[index]!.lit}
-              />
-            ))}
-            {LINE_OPENING.map((item, index) => (
-              <path key={`doorink${index}`} ref={lineRefs[index]} className="iso-line" data-tone={item.tone} d={item.d} />
-            ))}
+            {/* the door, one skin to the reader at a time: its solids, with the
+                ink riding on the run of parts it was drawn for */}
+            <g className="the-safe-door">{inward ? layers.inward : layers.outward}</g>
           </IsoFigure>
         </div>
 
