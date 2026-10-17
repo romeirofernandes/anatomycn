@@ -18,6 +18,7 @@ type Highlighter = Awaited<ReturnType<typeof createHighlighterCore>>;
 
 export type AgentCodeLanguage =
   | "bash"
+  | "css" // local: the manual install lists each file, stylesheets included
   | "diff"
   | "json"
   | "text"
@@ -51,6 +52,7 @@ const DARK_THEME = "github-dark-high-contrast";
 /** one chunk per grammar; fetched the first time a block asks for it */
 const GRAMMARS: Record<AgentCodeLanguage, () => Promise<unknown>> = {
   bash: () => import("@shikijs/langs/bash").then((m) => m.default),
+  css: () => import("@shikijs/langs/css").then((m) => m.default),
   diff: () => import("@shikijs/langs/diff").then((m) => m.default),
   json: () => import("@shikijs/langs/json").then((m) => m.default),
   tsx: () => import("@shikijs/langs/tsx").then((m) => m.default),

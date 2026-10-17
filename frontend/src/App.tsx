@@ -1,56 +1,32 @@
-import { TheTurntable } from "@/components/anatomy/the-turntable/the-turntable";
-import { TheZip } from "@/components/anatomy/the-zip/the-zip";
-import { InstallSection } from "@/components/InstallSection";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import * as React from "react";
+import { SiteField } from "@/components/site/site-field";
+import { SiteFooter } from "@/components/site/site-footer";
+import { SiteHeader } from "@/components/site/site-header";
+import { figureAt } from "@/figures";
+import { usePathname } from "@/lib/router";
 import { useTheme } from "@/lib/theme";
+import { FigurePage } from "@/pages/figure-page";
+import { Landing } from "@/pages/landing";
 
 export default function App() {
   const { theme, toggle } = useTheme();
+  const path = usePathname();
+  const entry = figureAt(path);
+
+  React.useEffect(() => {
+    document.title = entry
+      ? `${entry.name} · anatomycn`
+      : "anatomycn · isometric SVG figures for React";
+  }, [entry]);
 
   return (
     <div className="sheet iso" data-theme={theme}>
-      <div className="sheet-rules" aria-hidden="true">
-        <div className="sheet-rules-col" />
-      </div>
-
-      <div
-        className="sheet-body mx-auto max-w-3xl border-b px-5 sm:px-6"
-        style={{ borderColor: "var(--anatomy-lo)" }}
-      >
-        {/* name at the left trim line, toggle at the right one */}
-        <header className="flex items-center justify-between gap-6 py-6">
-          <h1
-            className="font-pixel pixel-square m-0 text-2xl leading-none"
-            style={{ color: "var(--anatomy-strong)" }}
-          >
-            anatomy-test
-          </h1>
-          <ThemeToggle theme={theme} onToggle={toggle} />
-        </header>
-      </div>
+      <SiteField theme={theme} />
 
       <div className="sheet-body mx-auto max-w-3xl px-5 sm:px-6">
-        <section className="py-10 sm:py-14">
-          <h2
-            className="font-pixel pixel-square m-0 mb-6 text-xl leading-none"
-            style={{ color: "var(--anatomy-strong)" }}
-          >
-            The Zip
-          </h2>
-          <TheZip theme={theme} />
-        </section>
-
-        <section className="pb-10 sm:pb-14">
-          <h2
-            className="font-pixel pixel-square m-0 mb-6 text-xl leading-none"
-            style={{ color: "var(--anatomy-strong)" }}
-          >
-            The Turntable
-          </h2>
-          <TheTurntable theme={theme} />
-        </section>
-
-        <InstallSection />
+        <SiteHeader theme={theme} onToggle={toggle} />
+        <main>{entry ? <FigurePage entry={entry} theme={theme} /> : <Landing theme={theme} />}</main>
+        <SiteFooter />
       </div>
     </div>
   );

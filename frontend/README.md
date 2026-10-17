@@ -1,17 +1,41 @@
-# anatomy
+# anatomycn
 
 Isometric SVG figures for the web. Each figure is a hand-built isometric drawing
 that animates from one number, ships as a React component, and can be dropped
 into any project with the shadcn CLI.
 
-## The sheet
-
-`index.html` is a single column: the masthead, a rule, and the figures below it.
-
 ```
 npm install
 npm run dev
 ```
+
+## The sheet
+
+One column, `max-w-3xl`, with the figure's own frame inside it. Two routes:
+
+| route | page |
+| --- | --- |
+| `/` | The landing: every figure in a grid, each card running its figure. |
+| `/<slug>` | One figure: the drawing, what it is for, and how to install it. |
+
+`src/lib/router.ts` is a thirty-line history router (`pushState` plus a
+`popstate` listener) and `src/lib/link.tsx` is the anchor that drives it, so the
+site carries no router dependency. A host serving the built site has to send
+unknown paths to `index.html`; `vite dev` and `vite preview` already do.
+
+Behind the column, `src/components/site/gradient-ascii.tsx` pins a gradient-ASCII
+field to the viewport. It is a WebGL2 port of
+[reactbits.dev/backgrounds/gradient-ascii](https://reactbits.dev/backgrounds/gradient-ascii),
+typed and trimmed to what the sheet uses, and it is site chrome: no figure
+depends on it.
+
+Cards run their figure live with the art marked `inert`, so the only thing in
+the tab order is the link to the figure's page. A figure stops itself when it
+leaves the viewport, which keeps a grid of them cheap.
+
+The catalogue in `src/figures.ts` is the one place a figure is described: slug,
+name, tagline, what it is for, the paths its registry item writes, and the
+component itself.
 
 ## The figures
 
@@ -62,12 +86,20 @@ files.
 npm run registry:build     # -> public/r/registry.json, anatomy-kit.json, the-zip.json, the-turntable.json
 ```
 
-Install a figure into another project:
+Install a figure into another project, with the dev server running:
 
 ```
 npx shadcn@latest add http://localhost:5173/r/the-zip.json
 npx shadcn@latest add http://localhost:5173/r/the-turntable.json
 ```
+
+The install sheet reads the command's host from `window.location.origin`, and its
+**manual** tab fetches the built item (`/r/<slug>.json`) and prints every file
+from it. So the sheet documents the exact payload `shadcn build` produced rather
+than a copy of the source that could drift.
+
+`homepage` in `registry.json` is a placeholder (`https://anatomycn.dev`) and the
+CLI requires it, so set it to where the sheet is served before publishing.
 
 The item is self-contained: it carries the kit, the stylesheet and the figure,
 so the files land as working components with nothing else to wire up. The only
@@ -110,9 +142,11 @@ src/lib/utils.ts                        cn()
 
 beUI speaks shadcn's token names, so `src/index.css` maps them onto the
 anatomy palette with `@theme inline`. That keeps one set of utility classes and
-lets them follow the sheet's theme instead of freezing at load.
+lets them follow the sheet's theme instead of freezing at load. The install
+block also rescopes four of those tokens on itself in light mode, because the
+vendored surfaces sit on cool greys while the sheet is a warm off-white.
 
-Three local edits, all marked `// local:` in place:
+Four local edits, all marked `// local:` in place:
 
 1. `@custom-variant dark` in `src/index.css`. Tailwind's `dark:` follows the
    operating system by default, which would leave the code block on the wrong
@@ -122,5 +156,19 @@ Three local edits, all marked `// local:` in place:
 3. `agent-code.tsx` uses `shiki/core` with the JS regex engine and one dynamic
    chunk per grammar. The stock `createHighlighter` emits every grammar in the
    project plus a 622 kB wasm chunk.
+4. `agent-code.tsx` also carries a `css` grammar, for the manual file list.
 
 Re-running `shadcn add @beui/...` will overwrite these. Diff before you do.
+
+## Other vendored art
+
+- `public/file-icons/*.svg` — the TypeScript, CSS and React marks for the manual
+  file tree, downloaded from [svgl.app](https://svgl.app). React is the one mark
+  that needs two builds, so `src/components/site/file-type-icon.tsx` renders both
+  and `src/index.css` swaps them on the sheet's theme.
+- `src/components/site/gradient-ascii.tsx` — the background, from reactbits.
+
+## What is next
+
+`ROADMAP.md` holds the figures that are queued and not built: the padlock, the
+X-ray scanner, and the five behind them.

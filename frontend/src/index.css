@@ -64,7 +64,7 @@
   --color-ring: var(--anatomy-hi);
 }
 
-/* ——— The sheet: page background and its margin hatching ——— */
+/* ——— The sheet: the column, and the field running behind it ——— */
 .sheet {
   position: relative;
   min-height: 100vh;
@@ -72,39 +72,31 @@
   color: var(--anatomy-text);
   /* the drawing column: matches max-w-3xl on the body */
   --column: 48rem;
-  --hatch-pitch: 16px;
+  /* `cn`: a blue out of the field's own range */
+  --site-blue: #38bdf8;
+}
+
+.sheet[data-theme="light"] {
+  --site-blue: #1e3fd8;
 }
 
 /*
-  Hatching fills the margins at 45 degrees. The column covers it, opaque, and
+  The field is the gradient-ASCII plate, pinned to the viewport. It reaches the
+  margins, the header and the footer; the column covers the middle of it and
   carries the two trim lines that bound the 3xl.
 */
-.sheet-rules {
-  position: absolute;
+.site-field {
+  position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image: repeating-linear-gradient(
-    45deg,
-    var(--anatomy-faint) 0 0.5px,
-    transparent 0.5px var(--hatch-pitch)
-  );
-}
-
-.sheet-rules-col {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  translate: -50% 0;
-  width: min(100%, var(--column));
-  background-color: var(--anatomy-page);
-  box-shadow: inset 1px 0 0 var(--anatomy-lo), inset -1px 0 0 var(--anatomy-lo);
 }
 
 .sheet-body {
   position: relative;
   z-index: 1;
+  background: var(--anatomy-page);
+  box-shadow: inset 1px 0 0 var(--anatomy-lo), inset -1px 0 0 var(--anatomy-lo);
 }
 
 .sheet-eyebrow {
@@ -184,8 +176,8 @@
 /* ——— The theme toggle: half discs trade places, the ring turns ——— */
 .theme-toggle {
   flex: none;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   padding: 0;
   display: grid;
   place-items: center;
@@ -281,3 +273,195 @@
 .install-code pre {
   min-width: 0;
 }
+
+/*
+  Light mode only. The vendored surfaces came out on cool greys while the sheet
+  is a warm off-white, which read as dirt next to the page. Warm them to the
+  page and leave dark mode alone. Scoped to the install block: the drawings keep
+  the kit's own ramp.
+*/
+.sheet[data-theme="light"] .install {
+  --anatomy-faint: #e9e9e4;
+  --anatomy-lo: #d9d9d3;
+  --anatomy-muted: #7b7b76;
+}
+
+/* ——— site chrome ——— */
+.site-mark {
+  color: var(--anatomy-strong);
+  text-decoration: none;
+}
+
+.site-mark-cn {
+  color: var(--site-blue);
+}
+
+.site-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--anatomy-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--anatomy-muted);
+  text-decoration: none;
+  transition: color 160ms var(--anatomy-ease);
+}
+
+.site-back:hover {
+  color: var(--anatomy-strong);
+}
+
+.site-credit {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--anatomy-mid);
+  text-underline-offset: 3px;
+  transition: color 160ms var(--anatomy-ease), text-decoration-color 160ms var(--anatomy-ease);
+}
+
+.site-credit:hover {
+  color: var(--site-blue);
+  text-decoration-color: var(--site-blue);
+}
+
+/* file marks for the manual file tree (svgl.app art in public/file-icons) */
+.ft-icon {
+  display: block;
+  width: 14px;
+  height: 14px;
+}
+
+.ft-icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ft-icon-light {
+  display: none;
+}
+
+.sheet[data-theme="light"] .ft-icon-light {
+  display: block;
+}
+
+.sheet[data-theme="light"] .ft-icon-dark {
+  display: none;
+}
+
+/* ——— the landing grid ——— */
+/* No margin reset here: this file is unlayered, so a `margin: 0` would beat the
+   Tailwind spacing utility on the same element. Preflight already clears it. */
+.figure-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px 20px;
+}
+
+.figure-card {
+  min-width: 0;
+}
+
+.figure-card-link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* the plate is already the boundary; the card just lets it answer the pointer */
+.figure-card .the-zip-plate,
+.figure-card .the-turntable-plate {
+  transition: box-shadow 180ms var(--anatomy-ease);
+}
+
+.figure-card-link:hover .the-zip-plate,
+.figure-card-link:hover .the-turntable-plate {
+  box-shadow: 0 0 0 1px var(--anatomy-hi);
+}
+
+/* the figure's own control belongs to its page, not to a card */
+.figure-card .the-zip-control,
+.figure-card .the-turntable-control {
+  display: none;
+}
+
+/* the plates take their padding from the viewport; a card is not the viewport */
+.figure-card .the-zip {
+  --the-zip-pad: 14px;
+}
+
+.figure-card .the-turntable {
+  --the-turntable-pad: 14px;
+}
+
+.figure-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 12px 1px 0;
+}
+
+.figure-card-name {
+  font-size: 15px;
+  line-height: 1.2;
+  color: var(--anatomy-strong);
+}
+
+.figure-card-tagline {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--anatomy-muted);
+  transition: color 180ms var(--anatomy-ease);
+}
+
+.figure-card-link:hover .figure-card-tagline {
+  color: var(--anatomy-text);
+}
+
+/* ——— what a figure is for ——— */
+.use-list {
+  display: grid;
+  gap: 10px;
+}
+
+.use-list li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--anatomy-text);
+}
+
+/* a small diamond, in the same hand as the drawings */
+.use-list li::before {
+  content: "";
+  position: absolute;
+  top: 7px;
+  left: 2px;
+  width: 6px;
+  height: 6px;
+  border: 1px solid var(--anatomy-mid);
+  rotate: 45deg;
+}
+
+/*
+  Tailwind's preflight leaves every button on the default arrow. The sheet is
+  chrome, so the hand goes back on everywhere except where a control is off.
+*/
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]) {
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .figure-card .the-zip-plate,
+  .figure-card .the-turntable-plate,
+  .figure-card-tagline {
+    transition: none;
+  }
+}
+
