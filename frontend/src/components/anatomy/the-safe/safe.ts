@@ -2,13 +2,15 @@
    whole figure: how far the reader has turned it. Three movements follow in
    order, and they are the three a hand makes on a real safe: the dial spins and
    brings its graduations onto the fixed index; the handle comes a quarter turn
-   out and the bolts ride out of the door's edges; then the door swings open on
-   its hinge, away from the reader, and shows the chamber.
+   out and the bolts ride out of the door's edges; then the door swings clear of
+   the opening on its hinge, and the chamber it was covering is on show.
 
    Nothing here is cut away and nothing is transparent. The shell is a stack of
    solid slabs, the chamber is a real recess with its own walls, and the door is
    one rigid panel rebuilt whole every frame: it spans z, and a turn about a
-   vertical line is only a screen matrix for geometry lying at one height.
+   vertical line is only a screen matrix for geometry lying at one height. The
+   door is also a real door in that it has two faces, and it shows the right one:
+   the dial, the plate and the handle outside, the boltwork inside.
 
    The one lit part is the index on the dial's plate. It never moves; the
    graduations turn past it. */
@@ -182,6 +184,10 @@ function extremes(): Point3[] {
   for (const x of [-BOLT_X, BOLT_X]) {
     door.push([x, DOOR_MY, DOOR.z1 + BOLT_STROKE], [x, DOOR_MY, DOOR.z0 - BOLT_STROKE], [x, DOOR_MY, DOOR.z1], [x, DOOR_MY, DOOR.z0]);
   }
+  /* the hinge barrel, which stands off the door's own edge, and the boss of the
+     boltwork, which stands off its inner face */
+  for (const x of [HINGE[0] - 6, HINGE[0] + 6]) for (const y of [HINGE[1] - 6, HINGE[1] + 6]) door.push([x, y, DOOR.z0 + 12], [x, y, DOOR.z1 - 12]);
+  for (const z of [DOOR_MZ - 11, DOOR_MZ + 11]) door.push([0, DOOR.y0 - 14, z]);
   for (const phi of [0, OPEN]) for (const point of door) points.push(swung(point, phi));
   return points;
 }
@@ -200,9 +206,11 @@ export interface Ink {
   d: string;
   tone: LineTone;
   className?: string;
+  /** an end that is meant to stop in the open: only the maker's printed rules */
+  free?: boolean;
 }
 const part = (paths: SolidPaths, tone: Tone = "mid", crease: Tone | "none" = "faint", lit = false, mark?: string): Part => ({ paths, tone, crease, lit, mark });
-const ink = (d: string, tone: LineTone = "lo", className?: string): Ink => ({ d, tone, className });
+const ink = (d: string, tone: LineTone = "lo", className?: string, free?: boolean): Ink => ({ d, tone, className, free });
 
 export const HALO = haloOf(insetPlan(PLINTH, -9), FOOT_Z, 6, P);
 
@@ -214,14 +222,14 @@ for (const [x, y] of [...corners(PLINTH, 20)].sort((a, b) => depthOf([a[0], a[1]
   BASE_PARTS.push(part(cylinder(x, y, 12, FOOT_Z, 6, P, 22, 1.4), "lo")); // pad
   BASE_PARTS.push(part(cylinder(x, y, 5, FOOT_Z + 6, 14, P, 16), "mid")); // stud
   BASE_PARTS.push(part(cylinder(x, y, 7.6, FOOT_Z + 9, 6, P, 18, 0.8), "mid")); // lock nut
-  BASE_LINES.push(ink(pathOf(pointsAt([[x, y, FOOT_Z + 15], [x, y, DECK_Z]], P)), "faint"));
 }
 BASE_PARTS.push(part(slabOf(PLINTH, 0, PLINTH_H, P, 12, 1.6), "lo"));
 BASE_PARTS.push(part(slabOf(insetPlan(PLINTH, 7), PLINTH_H, DECK_Z - PLINTH_H, P, 12, 0.9), "mid"));
 BASE_LINES.push(ink(planOutline(insetPlan(PLINTH, 13), PLINTH_H, P, 12), "faint"));
 for (const [x, y] of corners(PLINTH, 15)) {
   BASE_PARTS.push(part(cylinder(x, y, 4.6, DECK_Z, 1.4, P, 14, 0.4), "mid"));
-  BASE_LINES.push(ink(lineOnTop([x - 3.4, y], [x + 3.4, y], DECK_Z + 1.4, P), "faint"));
+  /* the slot runs out to the head's rim, so its ends land on the head's edge */
+  BASE_LINES.push(ink(lineOnTop([x - 4.2, y], [x + 4.2, y], DECK_Z + 1.4, P), "faint"));
 }
 /* the maker's plate on the plinth's front ledge, with its three rules */
 BASE_PARTS.push(part(slabOf({ x: -104, y: 84, w: 96, d: 16, r: 3 }, DECK_Z, 1.2, P, 6, 0.3), "mid"));
@@ -230,7 +238,7 @@ for (const [at, width] of [
   [92.7, 64],
   [95.4, 24],
 ] as Plane[]) {
-  BASE_LINES.push(ink(lineOnTop([-98, at], [-98 + width, at], DECK_Z + 1.2, P), "faint", "the-safe-type"));
+  BASE_LINES.push(ink(lineOnTop([-98, at], [-98 + width, at], DECK_Z + 1.2, P), "faint", "the-safe-type", true));
 }
 BASE_LINES.push(ink(planOutline(insetPlan(BODY, -4), DECK_Z, P, 12), "faint"));
 
@@ -289,7 +297,7 @@ for (const [up, width] of [
   [146.5, 22],
   [153, 12],
 ] as Plane[]) {
-  SHELL_LINES.push(ink(lineOnTop([-88 - width / 2, FACE_Y + 1.6], [-88 + width / 2, FACE_Y + 1.6], up, P), "faint", "the-safe-type"));
+  SHELL_LINES.push(ink(lineOnTop([-88 - width / 2, FACE_Y + 1.6], [-88 + width / 2, FACE_Y + 1.6], up, P), "faint", "the-safe-type", true));
 }
 
 /* ——— the chamber: a real recess, with its own walls, shelves and hoard ———
@@ -470,6 +478,7 @@ export function doorLines(phi: number, spin: number): Array<{ d: string; tone: L
       const t = (index / steps) * TAU;
       points.push([centre[0] + radius * Math.sin(t), y, centre[1] + radius * Math.cos(t)]);
     }
+    points.push(points[0]!); // a closed ring: its ends meet, so nothing lands
     return at(points);
   };
   const ring = (centre: Plane, radius: number, out: number, steps = 44) => ringAt(centre, radius, DOOR.y1 + out, steps);
@@ -482,6 +491,10 @@ export function doorLines(phi: number, spin: number): Array<{ d: string; tone: L
   return [
     { d: minor.join(""), tone: "faint", face: "outer" },
     { d: major.join(""), tone: "lo", face: "outer" },
+    /* the ring the graduations run out to: on the far half of the dial the cap's
+       rim is inside the silhouette and carries no stroke, so without a ring of
+       its own the ticks would stop in the open there */
+    { d: ring(DIAL, 29.6, CAP_OUT + 0.3), tone: "faint", face: "outer" },
     { d: ring(DIAL, 20, CAP_OUT + 0.3), tone: "faint", face: "outer" },
     { d: ring(DIAL, 14, CAP_OUT + 0.3), tone: "faint", face: "outer" },
     { d: ring(DIAL, 7, CAP_OUT + 6.3), tone: "faint", face: "outer" },

@@ -46,8 +46,15 @@
       "type": "registry:block",
       "title": "The Zip",
       "description": "An isometric zip in SVG. Two tapes bow apart past the slider and their teeth mesh behind it; one number drives the tapes, every tooth and the slider body. It runs its own idle tour with a play/pause control, and once paused you can drag the slider or drive it with the arrow keys.",
-      "categories": ["svg", "isometric", "interactive"],
-      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "categories": [
+        "svg",
+        "isometric",
+        "interactive"
+      ],
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
       "files": [
         {
           "path": "src/components/anatomy/the-zip/the-zip.tsx",
@@ -96,8 +103,15 @@
       "type": "registry:block",
       "title": "The Turntable",
       "description": "An isometric turntable in SVG. The platter spins while the tonearm lifts off its rest, swings in, sets the stylus on the record and creeps toward the label; one clock drives the platter, the arm's bearing and its cue height. It runs its own tour with a play/pause control, and once paused you can drag the arm to any groove or drive it with the arrow keys.",
-      "categories": ["svg", "isometric", "interactive"],
-      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "categories": [
+        "svg",
+        "isometric",
+        "interactive"
+      ],
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
       "files": [
         {
           "path": "src/components/anatomy/the-turntable/the-turntable.tsx",
@@ -151,8 +165,15 @@
       "type": "registry:block",
       "title": "The Padlock",
       "description": "An isometric padlock in SVG. The shackle lifts clear of the two bores in the crown, swings open about its heel leg, and the keyway turns a quarter turn in the escutcheon; one number drives the lift, the swing and the turn. It runs its own tour with a play/pause control, and once paused you can scrub the lock or drive it with the arrow keys.",
-      "categories": ["svg", "isometric", "interactive"],
-      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "categories": [
+        "svg",
+        "isometric",
+        "interactive"
+      ],
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
       "files": [
         {
           "path": "src/components/anatomy/the-padlock/the-padlock.tsx",
@@ -202,12 +223,81 @@
       ]
     },
     {
+      "name": "the-safe",
+      "type": "registry:block",
+      "title": "The Safe",
+      "description": "A solid combination safe in SVG, on levelling feet. One number drives the whole figure in the order a hand makes on a real safe: the dial spins its graduations onto the fixed index, the spoked handle comes a quarter turn out and throws the bolts through the door's edges, and the door swings clear on its hinge to show the chamber. Nothing is cut away, and the door is one rigid panel rebuilt every frame, so it turns to show its own inner face as it comes round. It runs its own loop with a play/pause control, and once paused you can scrub the door or drive it with the arrow keys.",
+      "categories": [
+        "svg",
+        "isometric",
+        "interactive"
+      ],
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
+      "files": [
+        {
+          "path": "src/components/anatomy/the-safe/the-safe.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/the-safe/the-safe.tsx"
+        },
+        {
+          "path": "src/components/anatomy/the-safe/safe.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/the-safe/safe.ts"
+        },
+        {
+          "path": "src/components/anatomy/the-safe/the-safe.css",
+          "type": "registry:file",
+          "target": "@components/anatomy/the-safe/the-safe.css"
+        },
+        {
+          "path": "src/components/anatomy/iso-kit.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/iso-kit.ts"
+        },
+        {
+          "path": "src/components/anatomy/axis-parts.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/axis-parts.ts"
+        },
+        {
+          "path": "src/components/anatomy/iso.css",
+          "type": "registry:file",
+          "target": "@components/anatomy/iso.css"
+        },
+        {
+          "path": "src/components/anatomy/react/draw.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/react/draw.tsx"
+        },
+        {
+          "path": "src/components/anatomy/react/live.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/react/live.tsx"
+        },
+        {
+          "path": "src/components/anatomy/live-solid.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/live-solid.tsx"
+        }
+      ]
+    },
+    {
       "name": "the-escalator",
       "type": "registry:block",
       "title": "The Escalator",
       "description": "An isometric escalator in SVG. Six 30\u00b0 steps carry cardboard boxes up and out of sight under the landing while every pallet and both handrail bands advance as one, all from a single number. It runs its own loop with a play/pause control, and once paused you can scrub the band or drive it with the arrow keys.",
-      "categories": ["svg", "isometric", "interactive"],
-      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "categories": [
+        "svg",
+        "isometric",
+        "interactive"
+      ],
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
       "files": [
         {
           "path": "src/components/anatomy/the-escalator/the-escalator.tsx",
@@ -261,8 +351,15 @@
       "type": "registry:block",
       "title": "The Scanner",
       "description": "An isometric baggage scanner in SVG. Parcels ride in on the belt, slide out of sight behind the tunnel's solid near wall, and come out the far side while the scan light sweeps the mouth; one number drives the belt, both carriers and the light. It runs its own loop with a play/pause control, and once paused you can scrub the belt or drive it with the arrow keys.",
-      "categories": ["svg", "isometric", "interactive"],
-      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "categories": [
+        "svg",
+        "isometric",
+        "interactive"
+      ],
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
       "files": [
         {
           "path": "src/components/anatomy/the-scanner/the-scanner.tsx",

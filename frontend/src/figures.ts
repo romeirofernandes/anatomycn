@@ -1,6 +1,7 @@
 import type * as React from "react";
 import { TheEscalator } from "@/components/anatomy/the-escalator/the-escalator";
 import { ThePadlock } from "@/components/anatomy/the-padlock/the-padlock";
+import { TheSafe } from "@/components/anatomy/the-safe/the-safe";
 import { TheScanner } from "@/components/anatomy/the-scanner/the-scanner";
 import { TheTurntable } from "@/components/anatomy/the-turntable/the-turntable";
 import { TheZip } from "@/components/anatomy/the-zip/the-zip";
@@ -108,6 +109,31 @@ export const FIGURES: FigureEntry[] = [
       "@components/anatomy/live-solid.tsx",
     ],
     Figure: ThePadlock,
+  },
+  {
+    slug: "the-safe",
+    name: "The Safe",
+    tagline: "The dial spins to its mark, the bolts throw, the door swings open.",
+    summary:
+      "A solid combination safe on levelling feet. One number drives the whole figure, in the order a hand makes on a real safe: the dial spins its graduations onto the fixed index, the spoked handle comes a quarter turn out and drives the bolts through the door's edges, and the door swings clear on its hinge to show the chamber. Nothing is cut away, and the door is one rigid panel rebuilt whole every frame, so it turns to show its inner face as it comes round. Pause it and the safe is yours to scrub.",
+    uses: [
+      "A security or encryption section that has to look like something",
+      "A vault, backup or data-residency feature",
+      "A pricing page, where the plan is what the safe holds",
+      "Anything that should read as heavy, shut and worth the trouble",
+    ],
+    files: [
+      "@components/anatomy/the-safe/the-safe.tsx",
+      "@components/anatomy/the-safe/safe.ts",
+      "@components/anatomy/the-safe/the-safe.css",
+      "@components/anatomy/iso-kit.ts",
+      "@components/anatomy/axis-parts.ts",
+      "@components/anatomy/iso.css",
+      "@components/anatomy/react/draw.tsx",
+      "@components/anatomy/react/live.tsx",
+      "@components/anatomy/live-solid.tsx",
+    ],
+    Figure: TheSafe,
   },
   {
     slug: "the-escalator",

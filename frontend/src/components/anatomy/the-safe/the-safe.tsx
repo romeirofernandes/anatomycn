@@ -29,7 +29,7 @@ import {
   tourAt,
   type DoorLayer,
   type Pose,
-} from "./the-safe";
+} from "./safe";
 import "./the-safe.css";
 
 const MOST_DT = 1 / 30;
@@ -262,7 +262,7 @@ export function TheSafe({ theme = "dark", className, playing: controlled, defaul
           role="slider"
           tabIndex={playing ? -1 : 0}
           data-interactive={playing ? undefined : ""}
-          aria-label="A solid combination safe in isometric view, standing on a plinth: the dial spins its graduations onto a fixed index, the spoked handle comes a quarter turn out and throws the bolts, and the door swings open away from the reader to show the chamber."
+          aria-label="A solid combination safe in isometric view, standing on a plinth: the dial spins its graduations onto a fixed index, the spoked handle comes a quarter turn out and throws the bolts, and the door swings open clear of the chamber."
           aria-readonly={playing}
           aria-valuemin={0}
           aria-valuemax={100}
@@ -307,7 +307,7 @@ export function TheSafe({ theme = "dark", className, playing: controlled, defaul
             width={WIDTH}
             height={HEIGHT}
             className="the-safe-figure"
-            label="A solid combination safe in isometric view, standing on a plinth: the dial spins its graduations onto a fixed index, the spoked handle comes a quarter turn out and throws the bolts, and the door swings open away from the reader to show the chamber"
+            label="A solid combination safe in isometric view, standing on a plinth: the dial spins its graduations onto a fixed index, the spoked handle comes a quarter turn out and throws the bolts, and the door swings open clear of the chamber"
           >
             <defs>
               <clipPath id={CAVITY}>
@@ -321,13 +321,13 @@ export function TheSafe({ theme = "dark", className, playing: controlled, defaul
               <Solid key={`base${index}`} paths={item.paths} tone={item.tone} crease={item.crease} lit={item.lit} className={item.mark} />
             ))}
             {BASE_LINES.map((item, index) => (
-              <Line key={`baseink${index}`} d={item.d} tone={item.tone} className={item.className} />
+              <Line key={`baseink${index}`} d={item.d} tone={item.tone} className={item.className} free={item.free} />
             ))}
             {SHELL_PARTS.map((item, index) => (
               <Solid key={`shell${index}`} paths={item.paths} tone={item.tone} crease={item.crease} lit={item.lit} className={item.mark} />
             ))}
             {SHELL_LINES.map((item, index) => (
-              <Line key={`shellink${index}`} d={item.d} tone={item.tone} className={item.className} />
+              <Line key={`shellink${index}`} d={item.d} tone={item.tone} className={item.className} free={item.free} />
             ))}
 
             {/* the chamber: only the three surfaces the camera can see, clipped

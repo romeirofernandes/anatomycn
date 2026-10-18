@@ -93,19 +93,20 @@
 
 /*
   The base under everything. The sheet is transparent and the gradient field is
-  transparent at its dark end, so without this the browser's own canvas shows
-  through the margins - a light-mode #fff that turned #121212 once the theme
-  set `color-scheme: dark`, which is not a colour anyone chose. light-dark()
-  follows that same `color-scheme`, so it flips with the theme without a second
-  rule and without a flash on the light side.
+  transparent at its dark end, so this is what shows through the margins. Left
+  to the browser the canvas is a different colour in each engine - Chrome
+  #121212, Firefox #1c1b22 - and none of them black. Plain colours keyed off
+  `data-theme` rather than light-dark(): an engine that doesn't apply that
+  function to the root background falls back to the light #fff, which under the
+  field's navy reads as a blue wash.
 */
 html {
-  background: #ffffff;
-  background: light-dark(#ffffff, #000000);
+  background-color: #ffffff;
 }
 
 html[data-theme="dark"] {
   --site-blue: #38bdf8;
+  background-color: #000000;
 }
 
 html[data-theme="light"] {
@@ -338,6 +339,10 @@ html[data-theme="dark"]::view-transition-new(theme-toggle) {
   --the-padlock-pad: 18px;
 }
 
+.figure-card .the-safe {
+  --the-safe-pad: 18px;
+}
+
 .figure-card .the-escalator {
   --the-escalator-pad: 18px;
 }
@@ -354,6 +359,7 @@ html[data-theme="dark"]::view-transition-new(theme-toggle) {
 .figure-card .the-zip-control,
 .figure-card .the-turntable-control,
 .figure-card .the-padlock-control,
+.figure-card .the-safe-control,
 .figure-card .the-escalator-control,
 .figure-card .the-scanner-control {
   top: 26px;
@@ -384,6 +390,7 @@ html[data-theme="dark"]::view-transition-new(theme-toggle) {
 .sheet .the-zip-plate,
 .sheet .the-turntable-plate,
 .sheet .the-padlock-plate,
+.sheet .the-safe-plate,
 .sheet .the-escalator-plate,
 .sheet .the-scanner-plate {
   box-shadow: 0 0 0 1px var(--anatomy-lo);
@@ -394,6 +401,7 @@ html[data-theme="dark"]::view-transition-new(theme-toggle) {
   .figure-card:hover .the-zip-plate,
   .figure-card:hover .the-turntable-plate,
   .figure-card:hover .the-padlock-plate,
+  .figure-card:hover .the-safe-plate,
   .figure-card:hover .the-escalator-plate,
   .figure-card:hover .the-scanner-plate {
     box-shadow: 0 0 0 1px var(--site-blue);
@@ -425,6 +433,7 @@ html[data-theme="dark"]::view-transition-new(theme-toggle) {
   .sheet .the-zip-plate,
   .sheet .the-turntable-plate,
   .sheet .the-padlock-plate,
+  .sheet .the-safe-plate,
   .sheet .the-escalator-plate,
   .sheet .the-scanner-plate {
     transition: none;
