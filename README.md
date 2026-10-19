@@ -1,10 +1,12 @@
 # anatomycn
 
 isometric svg components that actually move. every figure is a hand-built drawing
-animated off a single number, and it drops into any react project with the
-shadcn cli.
+animated off a single number, and it drops into any react project with the shadcn
+cli.
 
-![ten figures on the sheet](docs/gallery.jpg)
+live at [anatomycn.vercel.app](https://anatomycn.vercel.app).
+
+![The Loom, drawn isometrically](docs/the-loom.svg)
 
 tldr; ten figures - a zip, a turntable, a padlock, a safe, an escalator, a
 scanner, a combination dial, a loom, a lighthouse and a claw machine. no svg
@@ -12,8 +14,20 @@ files to hunt down, no animation library, no runtime dependency on this site.
 
 ## why
 
-i kept drawing these little isometric things into my own projects and kept
-rewriting the same three files around each new one, so now they all live here.
+two things i wanted to find out. how far
+[the anatomy skill](https://github.com/wheresryan22/anatomy) actually goes when
+you lean on it, and what the free models on opencode can do with something this
+fiddly.
+
+so i pointed every model i could at the same brief. deepseek v4.1 flash was the
+only one that came back with something decent - every other model wasn't close.
+which is funny, because the anthropic models are supposedly the good ones at
+exactly this. hehe maybe deepseek is just distilled anthropic models :p
+
+all of this is what came out of that run, so the look of it belongs to
+[wheresryan22](https://github.com/wheresryan22/anatomy) and the skill he wrote.
+
+## the idea
 
 every figure runs off one number between 0 and 1. point that number at something
 in your app and the drawing follows it. the zip opens while the settings panel
@@ -25,18 +39,10 @@ none of them are cutaway diagrams either. it's the outside of a real object,
 doing the thing you built it for, and nothing is drawn opened up to explain how
 it works. that was the one rule i didn't break.
 
-## the sheet
+each figure also has its own page - what it's for, and a few places it earns its
+keep.
 
-the landing runs all ten at once, and each figure has its own page. it's live at
-[anatomycn.vercel.app](https://anatomycn.vercel.app). here's the same dial in
-both themes.
-
-![the safe dial in dark and light](docs/themes.jpg)
-
-and here's what a figure's page looks like - the drawing, what it's for, and a
-few places it earns its keep.
-
-![the loom's page](docs/figure-page.jpg)
+![The Turntable's page](docs/figure-page.jpg)
 
 ## the figures
 
@@ -52,6 +58,8 @@ few places it earns its keep.
 | `the-loom` | an integrations or data pipeline section, many sources into one fabric |
 | `the-lighthouse` | an uptime, status or monitoring page |
 | `the-claw-machine` | a search or discovery product, where the pick is the point |
+
+![The Claw Machine, drawn isometrically](docs/the-claw-machine.svg)
 
 ## install
 
@@ -122,8 +130,10 @@ local edits i've made to them.
 
 ## credits
 
-the isometric kit and the drawing style come from the anatomy skill by aryan.
-the figures, the site and the copy are mine.
+the isometric kit and the drawing style come from
+[the anatomy skill](https://github.com/wheresryan22/anatomy) by wheresryan22,
+which is the only reason any of this looks like anything. the figures, the site
+and the copy are mine.
 
 if you build something with one of these, i'd like to see it -
 [@whotookromeiro](https://twitter.com/whotookromeiro).
