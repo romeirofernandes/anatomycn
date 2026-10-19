@@ -1,7 +1,6 @@
-/* The Lighthouse — the framed plate the figure sits in, its readout and the
-   play/pause control. The drawing is styled by iso.css; the only thing this file
-   adds to it is the light, which is not a part of the figure but a wash laid
-   over it. */
+/* The Lighthouse — the framed plate the figure sits in and the play/pause
+   control. The drawing is styled by iso.css; the only thing this file adds to it
+   is the light, which is not a part of the figure but a wash laid over it. */
 
 .the-lighthouse {
   --the-lighthouse-pad: clamp(16px, 4.5vw, 34px);
@@ -93,23 +92,6 @@
   fill: var(--anatomy-shade-0);
 }
 
-/* the beam reads in the corner the drawing leaves empty: the light runs out over
-   the top of the card, so the words live under the sea */
-.the-lighthouse-readout {
-  position: absolute;
-  top: calc(var(--the-lighthouse-pad) - 2px);
-  left: var(--the-lighthouse-pad);
-  max-width: 72%;
-  color: var(--anatomy-text);
-  font-size: 11px;
-  line-height: 1.35;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  pointer-events: none;
-}
-
 .the-lighthouse-control {
   position: absolute;
   top: calc(var(--the-lighthouse-pad) - 8px);
@@ -176,13 +158,6 @@
 .the-lighthouse :focus-visible {
   outline: 1px solid var(--anatomy-hi);
   outline-offset: 4px;
-}
-
-@media (max-width: 520px) {
-  .the-lighthouse-readout {
-    font-size: 10px;
-    max-width: 82%;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

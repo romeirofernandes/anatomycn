@@ -95,7 +95,6 @@ export function TheLighthouse({
 
   const root = React.useRef<HTMLDivElement | null>(null);
   const inView = useInView(root);
-  const readout = React.useRef<HTMLSpanElement | null>(null);
   const frame = React.useRef(0);
   const last = React.useRef(0);
   const reach = React.useRef(0);
@@ -161,7 +160,6 @@ export function TheLighthouse({
     for (let index = 0; index < drum.length; index++) panels[index]?.current?.apply(drum[index]!);
 
     const text = stateText(at);
-    if (readout.current && readout.current.textContent !== text) readout.current.textContent = text;
     const host = root.current;
     if (host) {
       const now = String(Math.round(((at % AT_MAX) + AT_MAX) % AT_MAX));
@@ -389,10 +387,6 @@ export function TheLighthouse({
             ))}
           </IsoFigure>
         </div>
-
-        <span ref={readout} className="the-lighthouse-readout" data-readout="">
-          {stateText(STILL_AT)}
-        </span>
 
         <button
           type="button"
