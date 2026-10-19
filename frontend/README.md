@@ -63,6 +63,9 @@ the-turntable/
   turntable.ts        the deck, the platter, the arm parts, and the tour
 ```
 
+The other eight sit beside those two in the same shape, each with its own
+`<name>.ts` holding the geometry and nothing else.
+
 The split is deliberate. `zip.ts` is pure: given where the slider sits it
 returns the paths for both tapes, every tooth and the slider body. The React
 component owns one `requestAnimationFrame` loop, writes those paths straight
@@ -88,7 +91,7 @@ that groove with `tourTimeFor`, so the side plays on from where it was left.
 files.
 
 ```
-npm run registry:build     # -> public/r/registry.json, anatomy-kit.json, the-zip.json, the-turntable.json
+npm run registry:build     # -> public/r/registry.json, anatomy-kit.json, and one item per figure
 ```
 
 Install a figure into another project, with the dev server running:
@@ -110,7 +113,7 @@ The item is self-contained: it carries the kit, the stylesheet and the figure,
 so the files land as working components with nothing else to wire up. The only
 external packages are the two Hugeicons ones used by the play/pause control.
 
-Both figures write to `@components/anatomy/...`, so the consuming project needs
+Every figure writes to `@components/anatomy/...`, so the consuming project needs
 the `@/*` alias in three places. Miss the third one and the CLI cannot resolve
 the alias: it falls back to a literal directory called `@/` at the project root.
 
@@ -175,5 +178,5 @@ Re-running `shadcn add @beui/...` will overwrite these. Diff before you do.
 
 ## What is next
 
-`ROADMAP.md` holds the figures that are queued and not built: the padlock, the
-X-ray scanner, and the five behind them.
+Nothing is queued right now. `ROADMAP.md` keeps the record of what shipped and
+the briefs the last four were built from.
