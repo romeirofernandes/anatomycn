@@ -30,17 +30,20 @@
   cursor: grabbing;
 }
 
-/* the dial's own number, and the combination filling in beside it */
+/* the dial's own number, and the combination filling in beside it: it sits in
+   the plate's own corner, so it lands in the same place on the card and on the
+   figure's page */
 .the-safe-dial-readout {
   position: absolute;
-  top: 3%;
-  left: 2%;
+  top: calc(var(--the-safe-dial-pad) - 2px);
+  left: var(--the-safe-dial-pad);
   display: flex;
   align-items: baseline;
   gap: 16px;
   font-family: var(--anatomy-mono);
   font-variant-numeric: tabular-nums;
   pointer-events: none;
+  z-index: 1;
 }
 
 .the-safe-dial-number {
@@ -143,10 +146,6 @@
 }
 
 @media (max-width: 520px) {
-  .the-safe-dial-readout {
-    top: 2%;
-    left: 1%;
-  }
   .the-safe-dial-number {
     font-size: 15px;
   }

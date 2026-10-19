@@ -15,7 +15,6 @@ import {
   planOutline,
   pointsAt,
   slabOf,
-  translateAlong,
   type LineTone,
   type Plan,
   type Plane,
@@ -36,7 +35,7 @@ const easeInOut = (x: number) => {
 };
 
 /* ——— the bench, on four levelling feet ——— */
-export const PLINTH: Plan = { x: -140, y: -86, w: 280, d: 172, r: 16 };
+export const PLINTH: Plan = { x: -148, y: -86, w: 300, d: 172, r: 16 };
 const PLINTH_H = 22;
 export const DECK_Z = 22;
 const FOOT_Z = -14;
@@ -54,16 +53,18 @@ const HUB_Y = 36;
 
 /* ——— the bolt, the collar it comes out of, and the keeper post it goes into.
        The three are drawn in that order — plate, bolt, collar, keeper — so the
-       bolt is seen to leave one and enter the other. ——— */
+       bolt is seen to leave one and enter the other. The bolt is redrawn from
+       its seat each frame rather than slid along, so its seat never shows: the
+       collar hides it at every throw. ——— */
 export const BOLT_Z = 56;
 const BOLT_Y = 6;
 const BOLT_R = 7;
 const BOLT_BASE = 30;
-const BOLT_TIP = 116;
-const BOLT_STROKE = 72;
+const BOLT_TIP = 132;
+const BOLT_STROKE = 84;
 const COLLAR = { x0: 22, x1: 48, y0: -4, y1: 16, z0: 36, z1: 78 };
-const KEEPER = { x0: 100, x1: 132, y0: -12, y1: 12, z1: 92 };
-const SLOT = 12;
+const KEEPER = { x0: 116, x1: 148, y0: -10, y1: 10, z1: 104 };
+const SLOT = 14;
 
 /* ——— the stops: each lifts one more sixth of a turn than the last, so the
        numbers that come up under the index are 62, 24 and 86 ——— */
@@ -150,7 +151,7 @@ const keeper = (z0: number, z1: number, grow = 0): SolidPaths =>
 export const KEEPER_PARTS: Part[] = [
   part(keeper(DECK_Z, BOLT_Z - SLOT), "mid"),
   part(keeper(BOLT_Z + SLOT, KEEPER.z1), "mid"),
-  part(keeper(KEEPER.z1, KEEPER.z1 + 8, 4), "hi"),
+  part(keeper(KEEPER.z1, KEEPER.z1 + 7, 3), "hi"),
 ];
 
 /* ——— the plate, its foot and its screws ——— */
@@ -181,23 +182,31 @@ for (const [x, z] of [
   STAND_LINES.push(ink(pathOf(pointsAt([[x - 3.4, FACE_Y + 2.5, z], [x + 3.4, FACE_Y + 2.5, z]], P)), "faint"));
 }
 
-/* ——— the bolt, the collar it comes out of, and the throw ——— */
-export const BOLT = prismOf(
-  frameAlong([BOLT_BASE, BOLT_Y, BOLT_Z], [BOLT_TIP, BOLT_Y, BOLT_Z]),
-  circleSection(BOLT_R, 20),
-  0,
-  BOLT_TIP - BOLT_BASE,
-  P,
-  { creases: false },
-);
-export const BOLT_RING = prismOf(
-  frameAlong([BOLT_TIP - 15, BOLT_Y, BOLT_Z], [BOLT_TIP - 9, BOLT_Y, BOLT_Z]),
-  circleSection(BOLT_R + 2.4, 20),
-  0,
-  6,
-  P,
-  { creases: false },
-);
+/* ——— the bolt, the collar it comes out of, and the throw ———
+   The seat sits short of the collar's own right face, so whatever the throw,
+   the collar covers it and only the shaft is ever seen. */
+export const boltShape = (open: number): SolidPaths => {
+  const tip = Math.max(BOLT_BASE + 8, BOLT_TIP - BOLT_STROKE * open);
+  return prismOf(
+    frameAlong([BOLT_BASE, BOLT_Y, BOLT_Z], [tip, BOLT_Y, BOLT_Z]),
+    circleSection(BOLT_R, 20),
+    0,
+    tip - BOLT_BASE,
+    P,
+    { creases: false },
+  );
+};
+export const boltRingShape = (open: number): SolidPaths => {
+  const tip = Math.max(BOLT_BASE + 8, BOLT_TIP - BOLT_STROKE * open);
+  return prismOf(
+    frameAlong([tip - 15, BOLT_Y, BOLT_Z], [tip - 9, BOLT_Y, BOLT_Z]),
+    circleSection(BOLT_R + 2.4, 20),
+    0,
+    6,
+    P,
+    { creases: false },
+  );
+};
 export const COLLAR_PART = prismOf(
   faceFrame((COLLAR.x0 + COLLAR.x1) / 2, BOLT_Z, COLLAR.y0),
   faceRect((COLLAR.x1 - COLLAR.x0) / 2, (COLLAR.z1 - COLLAR.z0) / 2),
@@ -205,8 +214,6 @@ export const COLLAR_PART = prismOf(
   COLLAR.y1 - COLLAR.y0,
   P,
 );
-
-export const boltTransform = (open: number) => translateAlong(P, [-BOLT_STROKE * open, 0, 0]);
 
 /* ——— the dial ——— */
 export const BEZEL = discAt(DIAL.x, DIAL.z, FACE_Y, BEZEL_Y, DIAL.bezel, 72);

@@ -351,6 +351,22 @@ html[data-theme="dark"]::view-transition-new(theme-toggle) {
   --the-scanner-pad: 18px;
 }
 
+.figure-card .the-safe-dial {
+  --the-safe-dial-pad: 18px;
+}
+
+.figure-card .the-loom {
+  --the-loom-pad: 18px;
+}
+
+.figure-card .the-lighthouse {
+  --the-lighthouse-pad: 18px;
+}
+
+.figure-card .the-claw-machine {
+  --the-claw-machine-pad: 18px;
+}
+
 /*
   The play/pause control sits in the corner the drawing leaves empty, and it
   sits in the same place on every card: one inset, whatever the plate's own
@@ -361,7 +377,11 @@ html[data-theme="dark"]::view-transition-new(theme-toggle) {
 .figure-card .the-padlock-control,
 .figure-card .the-safe-control,
 .figure-card .the-escalator-control,
-.figure-card .the-scanner-control {
+.figure-card .the-scanner-control,
+.figure-card .the-safe-dial-control,
+.figure-card .the-loom-control,
+.figure-card .the-lighthouse-control,
+.figure-card .the-claw-machine-control {
   top: 26px;
   right: 26px;
 }
@@ -374,6 +394,28 @@ html[data-theme="dark"]::view-transition-new(theme-toggle) {
 */
 .figure-card .iso-stage {
   aspect-ratio: 640 / 420;
+}
+
+/*
+  The four figures that are taller than the box take their own viewBox as their
+  card's shape instead: the loom and the lighthouse are broader than they are
+  deep, and the claw machine is a cabinet. Matching the box to the drawing means
+  each one fills its card, and every pointer map stays exact.
+*/
+.figure-card[data-figure="the-safe-dial"] .iso-stage {
+  aspect-ratio: 700 / 486;
+}
+
+.figure-card[data-figure="the-loom"] .iso-stage {
+  aspect-ratio: 706 / 574;
+}
+
+.figure-card[data-figure="the-lighthouse"] .iso-stage {
+  aspect-ratio: 572 / 486;
+}
+
+.figure-card[data-figure="the-claw-machine"] .iso-stage {
+  aspect-ratio: 580 / 856;
 }
 
 .figure-card .iso-svg {
@@ -392,7 +434,11 @@ html[data-theme="dark"]::view-transition-new(theme-toggle) {
 .sheet .the-padlock-plate,
 .sheet .the-safe-plate,
 .sheet .the-escalator-plate,
-.sheet .the-scanner-plate {
+.sheet .the-scanner-plate,
+.sheet .the-safe-dial-plate,
+.sheet .the-loom-plate,
+.sheet .the-lighthouse-plate,
+.sheet .the-claw-machine-plate {
   box-shadow: 0 0 0 1px var(--anatomy-lo);
   transition: box-shadow 180ms var(--anatomy-ease);
 }
@@ -403,7 +449,11 @@ html[data-theme="dark"]::view-transition-new(theme-toggle) {
   .figure-card:hover .the-padlock-plate,
   .figure-card:hover .the-safe-plate,
   .figure-card:hover .the-escalator-plate,
-  .figure-card:hover .the-scanner-plate {
+  .figure-card:hover .the-scanner-plate,
+  .figure-card:hover .the-safe-dial-plate,
+  .figure-card:hover .the-loom-plate,
+  .figure-card:hover .the-lighthouse-plate,
+  .figure-card:hover .the-claw-machine-plate {
     box-shadow: 0 0 0 1px var(--site-blue);
   }
 }
@@ -435,7 +485,11 @@ html[data-theme="dark"]::view-transition-new(theme-toggle) {
   .sheet .the-padlock-plate,
   .sheet .the-safe-plate,
   .sheet .the-escalator-plate,
-  .sheet .the-scanner-plate {
+  .sheet .the-scanner-plate,
+  .sheet .the-safe-dial-plate,
+  .sheet .the-loom-plate,
+  .sheet .the-lighthouse-plate,
+  .sheet .the-claw-machine-plate {
     transition: none;
   }
 }

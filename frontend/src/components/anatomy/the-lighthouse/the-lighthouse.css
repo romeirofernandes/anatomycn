@@ -97,7 +97,7 @@
    the top of the card, so the words live under the sea */
 .the-lighthouse-readout {
   position: absolute;
-  bottom: calc(var(--the-lighthouse-pad) - 6px);
+  top: calc(var(--the-lighthouse-pad) - 2px);
   left: var(--the-lighthouse-pad);
   max-width: 72%;
   color: var(--anatomy-text);

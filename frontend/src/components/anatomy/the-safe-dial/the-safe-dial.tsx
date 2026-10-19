@@ -5,13 +5,12 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { PauseIcon, PlayIcon } from "@hugeicons/core-free-icons";
 import { IsoFigure, Solid } from "@/components/anatomy/react/draw";
 import { asksForStillness, follow, useInView } from "@/components/anatomy/react/live";
+import { LiveSolid, type SolidHandle } from "@/components/anatomy/live-solid";
 import { iso } from "@/components/anatomy/iso-kit";
 import {
   BASE_LINES,
   BASE_PARTS,
   BEZEL,
-  BOLT,
-  BOLT_RING,
   COLLAR_PART,
   COMBO,
   DIAL,
@@ -29,7 +28,8 @@ import {
   STOPS,
   HEIGHT,
   WIDTH,
-  boltTransform,
+  boltRingShape,
+  boltShape,
   dialNumber,
   enteredFor,
   graduationPaths,
@@ -90,7 +90,8 @@ export function TheSafeDial({
   const flutes = React.useRef<SVGPathElement | null>(null);
   const rings = React.useRef<SVGPathElement | null>(null);
   const witness = React.useRef<SVGCircleElement | null>(null);
-  const bolt = React.useRef<SVGGElement | null>(null);
+  const bolt = React.useRef<SolidHandle | null>(null);
+  const boltRing = React.useRef<SolidHandle | null>(null);
   const number = React.useRef<HTMLSpanElement | null>(null);
   const cells = React.useRef<Array<HTMLSpanElement | null>>([]);
 
@@ -112,7 +113,9 @@ export function TheSafeDial({
       witness.current.setAttribute("cy", wy.toFixed(2));
     }
 
-    bolt.current?.setAttribute("transform", boltTransform(openFor(spin)));
+    const open = openFor(spin);
+    bolt.current?.apply(boltShape(open));
+    boltRing.current?.apply(boltRingShape(open));
 
     const shown = String(dialNumber(spin)).padStart(2, "0");
     if (number.current && number.current.textContent !== shown) number.current.textContent = shown;
@@ -195,6 +198,26 @@ export function TheSafeDial({
   return (
     <div className={className ? `iso the-safe-dial ${className}` : "iso the-safe-dial"} data-theme={theme}>
       <div className="the-safe-dial-plate">
+        <div className="the-safe-dial-readout" aria-hidden="true">
+          <span className="the-safe-dial-number" ref={number}>
+            00
+          </span>
+          <span className="the-safe-dial-combo">
+            <span className="the-safe-dial-label">combination</span>
+            {COMBO.map((value, index) => (
+              <span
+                key={value}
+                className="the-safe-dial-cell"
+                ref={(node) => {
+                  cells.current[index] = node;
+                }}
+              >
+                {String(value).padStart(2, "0")}
+              </span>
+            ))}
+          </span>
+        </div>
+
         <div
           ref={root}
           className="the-safe-dial-stage"
@@ -245,26 +268,6 @@ export function TheSafeDial({
             setTarget(next);
           }}
         >
-          <div className="the-safe-dial-readout" aria-hidden="true">
-            <span className="the-safe-dial-number" ref={number}>
-              00
-            </span>
-            <span className="the-safe-dial-combo">
-              <span className="the-safe-dial-label">combination</span>
-              {COMBO.map((value, index) => (
-                <span
-                  key={value}
-                  className="the-safe-dial-cell"
-                  ref={(node) => {
-                    cells.current[index] = node;
-                  }}
-                >
-                  {String(value).padStart(2, "0")}
-                </span>
-              ))}
-            </span>
-          </div>
-
           <IsoFigure
             width={WIDTH}
             height={HEIGHT}
@@ -288,10 +291,8 @@ export function TheSafeDial({
 
             {/* the bolt leaves the collar and runs into the post: three parts,
                 painted in this order, so it is seen to do both */}
-            <g ref={bolt}>
-              <Solid paths={BOLT} tone="hi" crease="none" />
-              <Solid paths={BOLT_RING} tone="mid" crease="none" />
-            </g>
+            <LiveSolid paths={boltShape(0)} handle={bolt} tone="hi" crease="none" />
+            <LiveSolid paths={boltRingShape(0)} handle={boltRing} tone="mid" crease="none" />
             <Solid paths={COLLAR_PART} tone="mid" crease="faint" />
             {KEEPER_PARTS.map((piece, index) => (
               <Solid key={`keeper-${index}`} paths={piece.paths} tone={piece.tone} crease={piece.crease} lit={piece.lit} />
