@@ -1,0 +1,170 @@
+/* The Safe Dial — the framed plate the figure sits in, its readout, and the
+   play/pause control. The only chrome the figure needs; the drawing itself is
+   styled by iso.css. */
+
+.the-safe-dial {
+  --the-safe-dial-pad: clamp(16px, 4.5vw, 34px);
+}
+
+.the-safe-dial-plate {
+  position: relative;
+  background: var(--anatomy-card);
+  /* the figure's solids are filled with --anatomy-paper, which has to match
+     the surface they are drawn on or every body shows a lighter rectangle */
+  --anatomy-paper: var(--anatomy-card);
+  box-shadow: 0 0 0 1px var(--anatomy-mid);
+  padding: var(--the-safe-dial-pad);
+}
+
+.the-safe-dial-stage {
+  position: relative;
+  outline: none;
+}
+
+/* the pointer is only a handle while the tour is stopped: it turns the dial */
+.the-safe-dial-stage[data-interactive] {
+  cursor: grab;
+}
+
+.the-safe-dial-stage[data-interactive]:active {
+  cursor: grabbing;
+}
+
+/* the dial's own number, and the combination filling in beside it */
+.the-safe-dial-readout {
+  position: absolute;
+  top: 3%;
+  left: 2%;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  font-family: var(--anatomy-mono);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+.the-safe-dial-number {
+  font-size: 19px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--anatomy-hi);
+}
+
+.the-safe-dial-combo {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.12em;
+}
+
+.the-safe-dial-label {
+  font-size: 9px;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--anatomy-lo);
+}
+
+.the-safe-dial-cell {
+  color: var(--anatomy-lo);
+}
+
+.the-safe-dial-cell[data-on] {
+  color: var(--anatomy-lit);
+}
+
+.the-safe-dial-control {
+  position: absolute;
+  top: calc(var(--the-safe-dial-pad) - 8px);
+  right: calc(var(--the-safe-dial-pad) - 8px);
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--anatomy-mid);
+  border-radius: 999px;
+  background: var(--anatomy-card);
+  color: var(--anatomy-hi);
+  cursor: pointer;
+  transition:
+    border-color 160ms var(--anatomy-ease),
+    color 160ms var(--anatomy-ease),
+    transform 160ms var(--anatomy-ease);
+}
+
+/* hover only where a pointer can hover: a tap latches :hover */
+@media (hover: hover) {
+  .the-safe-dial-control:hover {
+    border-color: var(--anatomy-hi);
+    color: var(--anatomy-strong);
+  }
+}
+
+.the-safe-dial-control:active {
+  transform: translateY(0.5px);
+}
+
+.the-safe-dial-control svg {
+  display: block;
+}
+
+/* the icon-swap recipe: both glyphs stay in the one cell and cross-fade */
+.the-safe-dial-swap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+}
+
+.the-safe-dial-glyph {
+  grid-area: 1 / 1;
+  opacity: 0;
+  filter: blur(4px);
+  transform: scale(0.25);
+  transition:
+    opacity 300ms cubic-bezier(0.2, 0, 0, 1),
+    filter 300ms cubic-bezier(0.2, 0, 0, 1),
+    transform 300ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.the-safe-dial-glyph[data-on] {
+  opacity: 1;
+  filter: blur(0);
+  transform: scale(1);
+}
+
+.the-safe-dial :focus-visible {
+  outline: 1px solid var(--anatomy-hi);
+  outline-offset: 4px;
+}
+
+@media (max-width: 520px) {
+  .the-safe-dial-readout {
+    top: 2%;
+    left: 1%;
+  }
+  .the-safe-dial-number {
+    font-size: 15px;
+  }
+  .the-safe-dial-combo {
+    font-size: 9px;
+    gap: 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .the-safe-dial-control {
+    transition: none;
+  }
+  /* keep the fade, drop the movement */
+  .the-safe-dial-glyph,
+  .the-safe-dial-glyph[data-on] {
+    transition: opacity 150ms ease-out;
+    filter: none;
+    transform: none;
+  }
+}

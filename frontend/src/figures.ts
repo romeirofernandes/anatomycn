@@ -1,7 +1,11 @@
 import type * as React from "react";
+import { TheClawMachine } from "@/components/anatomy/the-claw-machine/the-claw-machine";
 import { TheEscalator } from "@/components/anatomy/the-escalator/the-escalator";
+import { TheLighthouse } from "@/components/anatomy/the-lighthouse/the-lighthouse";
+import { TheLoom } from "@/components/anatomy/the-loom/the-loom";
 import { ThePadlock } from "@/components/anatomy/the-padlock/the-padlock";
 import { TheSafe } from "@/components/anatomy/the-safe/the-safe";
+import { TheSafeDial } from "@/components/anatomy/the-safe-dial/the-safe-dial";
 import { TheScanner } from "@/components/anatomy/the-scanner/the-scanner";
 import { TheTurntable } from "@/components/anatomy/the-turntable/the-turntable";
 import { TheZip } from "@/components/anatomy/the-zip/the-zip";
@@ -184,6 +188,106 @@ export const FIGURES: FigureEntry[] = [
       "@components/anatomy/live-solid.tsx",
     ],
     Figure: TheScanner,
+  },
+  {
+    slug: "the-safe-dial",
+    name: "The Safe Dial",
+    tagline: "Spin the dial to the combination and the bolt lets go.",
+    summary:
+      "A combination dial, the lock face of a vault, bolted to the bench. One number is the dial's angle: the graduations turn under a fixed index, the readout fills as the three numbers land in order, and the bolt throws back the moment the combination is right. Nothing is cut away — the plate is solid and the bolt is the only thing that moves through it. Pause it and the dial is yours to spin.",
+    uses: [
+      "A sign-in, PIN or passkey section, where the code is the point",
+      "A gated feature that unlocks only when the reader does the right thing",
+      "An encryption or secrets product, where the lock is the metaphor",
+      "Anything that should read as shut until the combination is set",
+    ],
+    files: [
+      "@components/anatomy/the-safe-dial/the-safe-dial.tsx",
+      "@components/anatomy/the-safe-dial/safe-dial.ts",
+      "@components/anatomy/the-safe-dial/the-safe-dial.css",
+      "@components/anatomy/iso-kit.ts",
+      "@components/anatomy/axis-parts.ts",
+      "@components/anatomy/iso.css",
+      "@components/anatomy/react/draw.tsx",
+      "@components/anatomy/react/live.tsx",
+      "@components/anatomy/live-solid.tsx",
+    ],
+    Figure: TheSafeDial,
+  },
+  {
+    slug: "the-loom",
+    name: "The Loom",
+    tagline: "Warp, weft, and a shuttle that keeps the row coming.",
+    summary:
+      "A table loom. Warp threads run the length of the bed, the heddle lifts every other one, and the shuttle flies the weft across; the beater packs the row home and the cloth grows toward the reader. One number is the weave, and the shuttle, the heddle, the beater and the finished cloth are all that same number read four ways. Pause it and the shuttle is yours to run by hand.",
+    uses: [
+      "An integrations or data-pipeline section, many sources into one fabric",
+      "A no-code builder, where parts are woven into something whole",
+      "A content or collaboration product, threads becoming one thing",
+      "Anything that should read as patient, composed and made by hand",
+    ],
+    files: [
+      "@components/anatomy/the-loom/the-loom.tsx",
+      "@components/anatomy/the-loom/loom.ts",
+      "@components/anatomy/the-loom/the-loom.css",
+      "@components/anatomy/iso-kit.ts",
+      "@components/anatomy/axis-parts.ts",
+      "@components/anatomy/iso.css",
+      "@components/anatomy/react/draw.tsx",
+      "@components/anatomy/react/live.tsx",
+      "@components/anatomy/live-solid.tsx",
+    ],
+    Figure: TheLoom,
+  },
+  {
+    slug: "the-lighthouse",
+    name: "The Lighthouse",
+    tagline: "A steady beam that never goes dark.",
+    summary:
+      "A lighthouse on its rock: a tapering tower, a railed gallery and a glazed lamp room whose lens turns and throws its beam out across the dark. One number is the beam's angle — the lens, the sweep and the light on the water are the same value seen three times. Pause it and the beam is yours to swing.",
+    uses: [
+      "An uptime, status or monitoring page, where the beacon stays lit",
+      "A reliability or on-call section that has to feel calm",
+      "A hosting or infrastructure product that is always on",
+      "A hero for anything that should read as a fixed point in the dark",
+    ],
+    files: [
+      "@components/anatomy/the-lighthouse/the-lighthouse.tsx",
+      "@components/anatomy/the-lighthouse/lighthouse.ts",
+      "@components/anatomy/the-lighthouse/the-lighthouse.css",
+      "@components/anatomy/iso-kit.ts",
+      "@components/anatomy/axis-parts.ts",
+      "@components/anatomy/iso.css",
+      "@components/anatomy/react/draw.tsx",
+      "@components/anatomy/react/live.tsx",
+      "@components/anatomy/live-solid.tsx",
+    ],
+    Figure: TheLighthouse,
+  },
+  {
+    slug: "the-claw-machine",
+    name: "The Claw Machine",
+    tagline: "Line it up, drop the claw, carry the right one home.",
+    summary:
+      "An arcade claw machine with its case glazed. The gantry runs the rail, the claw drops on its cable, closes on a capsule, lifts it clear of the pile and carries it to the chute. One number is the cycle, and the carriage, the cable, the claw and the carried prize all follow it. Nothing is cut away — the case is solid glass over a working machine. Pause it and the claw is yours to run.",
+    uses: [
+      "A search or discovery product, where you pick the right result",
+      "An A/B or experimentation section, one winner out of the pile",
+      "A recruiting or marketplace page, where the pick is the point",
+      "Anything that should read as a moment of choosing",
+    ],
+    files: [
+      "@components/anatomy/the-claw-machine/the-claw-machine.tsx",
+      "@components/anatomy/the-claw-machine/claw-machine.ts",
+      "@components/anatomy/the-claw-machine/the-claw-machine.css",
+      "@components/anatomy/iso-kit.ts",
+      "@components/anatomy/axis-parts.ts",
+      "@components/anatomy/iso.css",
+      "@components/anatomy/react/draw.tsx",
+      "@components/anatomy/react/live.tsx",
+      "@components/anatomy/live-solid.tsx",
+    ],
+    Figure: TheClawMachine,
   },
 ];
 

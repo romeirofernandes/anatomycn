@@ -407,6 +407,254 @@
           "target": "@components/anatomy/live-solid.tsx"
         }
       ]
+    },
+    {
+      "name": "the-safe-dial",
+      "type": "registry:block",
+      "title": "The Safe Dial",
+      "description": "A combination dial in SVG, the lock face of a vault bolted to the bench. One number is the dial's angle: the knurled rim and its graduations turn under a fixed index, the readout fills as the three numbers of the combination land in order, and the bolt throws back through the plate the moment it is right. Nothing is cut away, and the bolt is the only part that moves through the solid plate. It runs its own loop with a play/pause control, and once paused you can spin the dial or drive it with the arrow keys.",
+      "categories": [
+        "svg",
+        "isometric",
+        "interactive"
+      ],
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
+      "files": [
+        {
+          "path": "src/components/anatomy/the-safe-dial/the-safe-dial.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/the-safe-dial/the-safe-dial.tsx"
+        },
+        {
+          "path": "src/components/anatomy/the-safe-dial/safe-dial.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/the-safe-dial/safe-dial.ts"
+        },
+        {
+          "path": "src/components/anatomy/the-safe-dial/the-safe-dial.css",
+          "type": "registry:file",
+          "target": "@components/anatomy/the-safe-dial/the-safe-dial.css"
+        },
+        {
+          "path": "src/components/anatomy/iso-kit.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/iso-kit.ts"
+        },
+        {
+          "path": "src/components/anatomy/axis-parts.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/axis-parts.ts"
+        },
+        {
+          "path": "src/components/anatomy/iso.css",
+          "type": "registry:file",
+          "target": "@components/anatomy/iso.css"
+        },
+        {
+          "path": "src/components/anatomy/react/draw.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/react/draw.tsx"
+        },
+        {
+          "path": "src/components/anatomy/react/live.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/react/live.tsx"
+        },
+        {
+          "path": "src/components/anatomy/live-solid.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/live-solid.tsx"
+        }
+      ]
+    },
+    {
+      "name": "the-loom",
+      "type": "registry:block",
+      "title": "The Loom",
+      "description": "A table loom in SVG. Warp threads run the length of the bed, the heddle lifts every other one, and the boat shuttle flies the weft across; the beater packs the row home and the finished cloth grows toward the reader row by row. One number is the weave, and the shuttle's travel, the heddle's lift, the beater's swing and the cloth are all that same number read four ways. It runs its own loop with a play/pause control, and once paused you can run the shuttle or drive it with the arrow keys.",
+      "categories": [
+        "svg",
+        "isometric",
+        "interactive"
+      ],
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
+      "files": [
+        {
+          "path": "src/components/anatomy/the-loom/the-loom.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/the-loom/the-loom.tsx"
+        },
+        {
+          "path": "src/components/anatomy/the-loom/loom.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/the-loom/loom.ts"
+        },
+        {
+          "path": "src/components/anatomy/the-loom/the-loom.css",
+          "type": "registry:file",
+          "target": "@components/anatomy/the-loom/the-loom.css"
+        },
+        {
+          "path": "src/components/anatomy/iso-kit.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/iso-kit.ts"
+        },
+        {
+          "path": "src/components/anatomy/axis-parts.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/axis-parts.ts"
+        },
+        {
+          "path": "src/components/anatomy/iso.css",
+          "type": "registry:file",
+          "target": "@components/anatomy/iso.css"
+        },
+        {
+          "path": "src/components/anatomy/react/draw.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/react/draw.tsx"
+        },
+        {
+          "path": "src/components/anatomy/react/live.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/react/live.tsx"
+        },
+        {
+          "path": "src/components/anatomy/live-solid.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/live-solid.tsx"
+        }
+      ]
+    },
+    {
+      "name": "the-lighthouse",
+      "type": "registry:block",
+      "title": "The Lighthouse",
+      "description": "A lighthouse in SVG, on its rock. A tapering tower carries a railed gallery and a glazed lamp room whose lens turns and throws its beam out across the dark; one number is the beam's angle, so the lens, the sweep and the light on the water are the same value seen three times. The tower is solid and nothing is cut away — the lamp room shows its lens the way a real one does through the glass. It runs its own loop with a play/pause control, and once paused you can swing the beam or drive it with the arrow keys.",
+      "categories": [
+        "svg",
+        "isometric",
+        "interactive"
+      ],
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
+      "files": [
+        {
+          "path": "src/components/anatomy/the-lighthouse/the-lighthouse.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/the-lighthouse/the-lighthouse.tsx"
+        },
+        {
+          "path": "src/components/anatomy/the-lighthouse/lighthouse.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/the-lighthouse/lighthouse.ts"
+        },
+        {
+          "path": "src/components/anatomy/the-lighthouse/the-lighthouse.css",
+          "type": "registry:file",
+          "target": "@components/anatomy/the-lighthouse/the-lighthouse.css"
+        },
+        {
+          "path": "src/components/anatomy/iso-kit.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/iso-kit.ts"
+        },
+        {
+          "path": "src/components/anatomy/axis-parts.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/axis-parts.ts"
+        },
+        {
+          "path": "src/components/anatomy/iso.css",
+          "type": "registry:file",
+          "target": "@components/anatomy/iso.css"
+        },
+        {
+          "path": "src/components/anatomy/react/draw.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/react/draw.tsx"
+        },
+        {
+          "path": "src/components/anatomy/react/live.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/react/live.tsx"
+        },
+        {
+          "path": "src/components/anatomy/live-solid.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/live-solid.tsx"
+        }
+      ]
+    },
+    {
+      "name": "the-claw-machine",
+      "type": "registry:block",
+      "title": "The Claw Machine",
+      "description": "An arcade claw machine in SVG, its case glazed. A gantry runs the rail across the top, a carriage drops the claw on its cable, the claw closes on a capsule, lifts it clear of the pile and carries it to the chute; one number is the cycle, and the carriage, the cable, the claw and the carried prize all follow it. Nothing is cut away — the case is solid glass over a working machine, with a coin slot and a joystick on the cabinet face. It runs its own loop with a play/pause control, and once paused you can run the claw or drive it with the arrow keys.",
+      "categories": [
+        "svg",
+        "isometric",
+        "interactive"
+      ],
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
+      "files": [
+        {
+          "path": "src/components/anatomy/the-claw-machine/the-claw-machine.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/the-claw-machine/the-claw-machine.tsx"
+        },
+        {
+          "path": "src/components/anatomy/the-claw-machine/claw-machine.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/the-claw-machine/claw-machine.ts"
+        },
+        {
+          "path": "src/components/anatomy/the-claw-machine/the-claw-machine.css",
+          "type": "registry:file",
+          "target": "@components/anatomy/the-claw-machine/the-claw-machine.css"
+        },
+        {
+          "path": "src/components/anatomy/iso-kit.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/iso-kit.ts"
+        },
+        {
+          "path": "src/components/anatomy/axis-parts.ts",
+          "type": "registry:lib",
+          "target": "@components/anatomy/axis-parts.ts"
+        },
+        {
+          "path": "src/components/anatomy/iso.css",
+          "type": "registry:file",
+          "target": "@components/anatomy/iso.css"
+        },
+        {
+          "path": "src/components/anatomy/react/draw.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/react/draw.tsx"
+        },
+        {
+          "path": "src/components/anatomy/react/live.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/react/live.tsx"
+        },
+        {
+          "path": "src/components/anatomy/live-solid.tsx",
+          "type": "registry:component",
+          "target": "@components/anatomy/live-solid.tsx"
+        }
+      ]
     }
   ]
 }

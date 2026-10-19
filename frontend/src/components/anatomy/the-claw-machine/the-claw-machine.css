@@ -1,0 +1,132 @@
+/* The Claw Machine — the framed plate the figure sits in, its readout, and the
+   play/pause control. The only chrome the figure needs; the drawing is styled by
+   iso.css. */
+
+.the-claw-machine {
+  --the-claw-machine-pad: clamp(16px, 4.5vw, 34px);
+}
+
+.the-claw-machine-plate {
+  position: relative;
+  background: var(--anatomy-card);
+  /* the figure's solids are filled with --anatomy-paper, which has to match the
+     surface they are drawn on or every body shows a lighter rectangle */
+  --anatomy-paper: var(--anatomy-card);
+  box-shadow: 0 0 0 1px var(--anatomy-mid);
+  padding: var(--the-claw-machine-pad);
+}
+
+.the-claw-machine-stage {
+  outline: none;
+}
+
+/* the pointer is only a handle while the tour is stopped: it scrubs the cycle */
+.the-claw-machine-stage[data-interactive] {
+  cursor: ew-resize;
+}
+
+.the-claw-machine-stage[data-interactive]:active {
+  cursor: grabbing;
+}
+
+/* the cycle reads in the corner the drawing leaves empty */
+.the-claw-machine-readout {
+  position: absolute;
+  top: calc(var(--the-claw-machine-pad) - 4px);
+  left: var(--the-claw-machine-pad);
+  max-width: 62%;
+  color: var(--anatomy-text);
+  font-size: 11px;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+.the-claw-machine-control {
+  position: absolute;
+  top: calc(var(--the-claw-machine-pad) - 8px);
+  right: calc(var(--the-claw-machine-pad) - 8px);
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--anatomy-mid);
+  border-radius: 999px;
+  background: var(--anatomy-card);
+  color: var(--anatomy-hi);
+  cursor: pointer;
+  transition:
+    border-color 160ms var(--anatomy-ease),
+    color 160ms var(--anatomy-ease),
+    transform 160ms var(--anatomy-ease);
+}
+
+/* hover only where a pointer can hover: a tap latches :hover */
+@media (hover: hover) {
+  .the-claw-machine-control:hover {
+    border-color: var(--anatomy-hi);
+    color: var(--anatomy-strong);
+  }
+}
+
+.the-claw-machine-control:active {
+  transform: translateY(0.5px);
+}
+
+.the-claw-machine-control svg {
+  display: block;
+}
+
+/* the icon-swap recipe: both glyphs stay in the one cell and cross-fade, so the
+   swap is scale 0.25 -> 1, blur 4px -> 0 over 300ms. No motion library needed. */
+.the-claw-machine-swap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+}
+
+.the-claw-machine-glyph {
+  grid-area: 1 / 1;
+  opacity: 0;
+  filter: blur(4px);
+  transform: scale(0.25);
+  transition:
+    opacity 300ms cubic-bezier(0.2, 0, 0, 1),
+    filter 300ms cubic-bezier(0.2, 0, 0, 1),
+    transform 300ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.the-claw-machine-glyph[data-on] {
+  opacity: 1;
+  filter: blur(0);
+  transform: scale(1);
+}
+
+.the-claw-machine :focus-visible {
+  outline: 1px solid var(--anatomy-hi);
+  outline-offset: 4px;
+}
+
+@media (max-width: 520px) {
+  .the-claw-machine-readout {
+    font-size: 10px;
+    max-width: 68%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .the-claw-machine-control {
+    transition: none;
+  }
+  /* keep the fade, drop the movement */
+  .the-claw-machine-glyph,
+  .the-claw-machine-glyph[data-on] {
+    transition: opacity 150ms ease-out;
+    filter: none;
+    transform: none;
+  }
+}

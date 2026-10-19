@@ -1,0 +1,199 @@
+/* The Lighthouse — the framed plate the figure sits in, its readout and the
+   play/pause control. The drawing is styled by iso.css; the only thing this file
+   adds to it is the light, which is not a part of the figure but a wash laid
+   over it. */
+
+.the-lighthouse {
+  --the-lighthouse-pad: clamp(16px, 4.5vw, 34px);
+  /* In the dark the light adds: a beam is ink that never darkens what it crosses.
+     On paper the same wash has to be a pale tint, so it is the faint tone
+     instead, which is how light reads in a drawing on a white sheet. */
+  --lh-beam: var(--anatomy-lit);
+  --lh-lamp: var(--anatomy-lit);
+}
+
+.the-lighthouse[data-theme="light"] {
+  --lh-beam: var(--anatomy-faint);
+}
+
+.the-lighthouse-plate {
+  position: relative;
+  background: var(--anatomy-card);
+  /* the figure's solids are filled with --anatomy-paper, which has to match
+     the surface they are drawn on or every body shows a lighter rectangle */
+  --anatomy-paper: var(--anatomy-card);
+  box-shadow: 0 0 0 1px var(--anatomy-mid);
+  padding: var(--the-lighthouse-pad);
+}
+
+.the-lighthouse-stage {
+  outline: none;
+}
+
+/* the pointer is only a handle while the sweep is stopped: it swings the beam */
+.the-lighthouse-stage[data-interactive] {
+  cursor: ew-resize;
+}
+
+.the-lighthouse-stage[data-interactive]:active {
+  cursor: grabbing;
+}
+
+/* the light, in the air and on the water: fades only, no strokes, and it never
+   takes the pointer, which belongs to the stage */
+.the-lighthouse-band,
+.the-lighthouse-core,
+.the-lighthouse-hot,
+.the-lighthouse-lane,
+.the-lighthouse-lane-core,
+.the-lighthouse-pool,
+.the-lighthouse-bloom {
+  stroke: none;
+  pointer-events: none;
+}
+
+.the-lighthouse-band {
+  fill: url(#the-lighthouse-band);
+}
+
+.the-lighthouse-core {
+  fill: url(#the-lighthouse-core);
+}
+
+.the-lighthouse-hot {
+  fill: url(#the-lighthouse-hot);
+}
+
+.the-lighthouse-lane {
+  fill: url(#the-lighthouse-lane);
+}
+
+.the-lighthouse-lane-core {
+  fill: url(#the-lighthouse-lane-core);
+}
+
+.the-lighthouse-pool {
+  fill: url(#the-lighthouse-pool);
+}
+
+.the-lighthouse-bloom {
+  fill: url(#the-lighthouse-bloom);
+}
+
+/* the lamp behind the lens and the two windows in the shaft: the drawing's one
+   accent, and the thing that never goes dark */
+.the-lighthouse-pane > .iso-fill {
+  fill: var(--lh-lamp);
+}
+
+/* the water is a shade under the bench: light lies on it, so it has to be the
+   darker of the two, and the swell has to be read against it */
+.the-lighthouse-water > .iso-fill,
+.the-lighthouse-water > .iso-top {
+  fill: var(--anatomy-shade-0);
+}
+
+/* the beam reads in the corner the drawing leaves empty: the light runs out over
+   the top of the card, so the words live under the sea */
+.the-lighthouse-readout {
+  position: absolute;
+  bottom: calc(var(--the-lighthouse-pad) - 6px);
+  left: var(--the-lighthouse-pad);
+  max-width: 72%;
+  color: var(--anatomy-text);
+  font-size: 11px;
+  line-height: 1.35;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+
+.the-lighthouse-control {
+  position: absolute;
+  top: calc(var(--the-lighthouse-pad) - 8px);
+  right: calc(var(--the-lighthouse-pad) - 8px);
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--anatomy-mid);
+  border-radius: 999px;
+  background: var(--anatomy-card);
+  color: var(--anatomy-hi);
+  cursor: pointer;
+  transition:
+    border-color 160ms var(--anatomy-ease),
+    color 160ms var(--anatomy-ease),
+    transform 160ms var(--anatomy-ease);
+}
+
+/* hover only where a pointer can hover: a tap latches :hover */
+@media (hover: hover) {
+  .the-lighthouse-control:hover {
+    border-color: var(--anatomy-hi);
+    color: var(--anatomy-strong);
+  }
+}
+
+.the-lighthouse-control:active {
+  transform: translateY(0.5px);
+}
+
+.the-lighthouse-control svg {
+  display: block;
+}
+
+/* the icon-swap recipe: both glyphs stay in the one cell and cross-fade, so the
+   swap is scale 0.25 -> 1, blur 4px -> 0 over 300ms. No motion library needed. */
+.the-lighthouse-swap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+}
+
+.the-lighthouse-glyph {
+  grid-area: 1 / 1;
+  opacity: 0;
+  filter: blur(4px);
+  transform: scale(0.25);
+  transition:
+    opacity 300ms cubic-bezier(0.2, 0, 0, 1),
+    filter 300ms cubic-bezier(0.2, 0, 0, 1),
+    transform 300ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.the-lighthouse-glyph[data-on] {
+  opacity: 1;
+  filter: blur(0);
+  transform: scale(1);
+}
+
+.the-lighthouse :focus-visible {
+  outline: 1px solid var(--anatomy-hi);
+  outline-offset: 4px;
+}
+
+@media (max-width: 520px) {
+  .the-lighthouse-readout {
+    font-size: 10px;
+    max-width: 82%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .the-lighthouse-control {
+    transition: none;
+  }
+  /* keep the fade, drop the movement */
+  .the-lighthouse-glyph,
+  .the-lighthouse-glyph[data-on] {
+    transition: opacity 150ms ease-out;
+    filter: none;
+    transform: none;
+  }
+}
