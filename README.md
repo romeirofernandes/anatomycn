@@ -6,6 +6,12 @@ cli.
 
 live at [anatomycn.vercel.app](https://anatomycn.vercel.app).
 
+[![The demo film: ten figures in one grid](docs/the-film.jpg)](https://anatomycn.vercel.app/anatomycn-demo.mp4)
+
+24 seconds, no voiceover - the card changes as you go: the dial, the loom, the
+claw machine, then all ten of them in one grid, then the one command that
+installs the lot.
+
 ![The Loom, drawn isometrically](docs/the-loom.svg)
 
 tldr; ten figures - a zip, a turntable, a padlock, a safe, an escalator, a
