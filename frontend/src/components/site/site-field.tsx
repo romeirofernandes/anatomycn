@@ -8,7 +8,7 @@ import type { Theme } from "@/lib/theme";
  * stays dark. Light climbs from the page's own white to the same blue.
  */
 const RAMP = {
-  dark: ["#01030c", "#0b1c6b", "#1e3fd8", "#4dd0ff"],
+  dark:  ["#05081c", "#f6f8ff", "#a5d8ff", "#38bdf8"],
   light: ["#ffffff", "#eef5ff", "#a5d8ff", "#4aa8ee"],
 } as const;
 
