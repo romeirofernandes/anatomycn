@@ -1,22 +1,10 @@
-# anatomycn
+[![anatomycn](docs/the-film.jpg)](frontend/public/anatomycn-demo.mp4)
 
 isometric svg components that actually move. every figure is a hand-built drawing
 animated off a single number, and it drops into any react project with the shadcn
 cli.
 
 live at [anatomycn.vercel.app](https://anatomycn.vercel.app).
-
-[![The demo film: ten figures in one grid](docs/the-film.jpg)](https://anatomycn.vercel.app/anatomycn-demo.mp4)
-
-24 seconds, no voiceover - the card changes as you go: the dial, the loom, the
-claw machine, then all ten of them in one grid, then the one command that
-installs the lot.
-
-[![The second film: the mark and the wordmark](docs/the-film-2.jpg)](https://anatomycn.vercel.app/anatomycn-demo-2.mp4)
-
-and a faster cut of the same idea - 27 seconds, one machine a shot, a new angle
-on every cut, a whip between them, then the ten in the grid and the one command
-again.
 
 ![The Loom, drawn isometrically](docs/the-loom.svg)
 
