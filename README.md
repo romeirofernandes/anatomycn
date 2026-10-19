@@ -122,8 +122,8 @@ local edits i've made to them.
 
 ## credits
 
-the isometric kit and the drawing style come from the anatomy skill. the figures,
-the site and the copy are mine.
+the isometric kit and the drawing style come from the anatomy skill by aryan.
+the figures, the site and the copy are mine.
 
 if you build something with one of these, i'd like to see it -
 [@whotookromeiro](https://twitter.com/whotookromeiro).
