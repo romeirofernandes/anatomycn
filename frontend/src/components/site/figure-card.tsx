@@ -13,7 +13,7 @@ export function FigureCard({ entry, theme }: { entry: FigureEntry; theme: Theme 
   const { Figure } = entry;
 
   return (
-    <li className="figure-card group/card relative min-w-0" data-figure={entry.slug}>
+    <li className="figure-card group/card relative min-w-0">
       <div className="relative z-1 pointer-events-none [&_button]:pointer-events-auto">
         <Figure theme={theme} />
       </div>

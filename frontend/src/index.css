@@ -390,32 +390,11 @@ html[data-theme="dark"]::view-transition-new(theme-toggle) {
   Cards are one size, so they draw into one box. This is the turntable's own
   proportion: it fills that box exactly, and the zip's wider drawing fits across
   it. Both figures read their pointer position off the frame, so keeping the box
-  the same shape as the widest viewBox keeps those maps honest.
+  the same shape as the widest viewBox keeps those maps honest. A drawing taller
+  than the box sits inside it at its own scale, the way it does on the sheet.
 */
 .figure-card .iso-stage {
   aspect-ratio: 640 / 420;
-}
-
-/*
-  The four figures that are taller than the box take their own viewBox as their
-  card's shape instead: the loom and the lighthouse are broader than they are
-  deep, and the claw machine is a cabinet. Matching the box to the drawing means
-  each one fills its card, and every pointer map stays exact.
-*/
-.figure-card[data-figure="the-safe-dial"] .iso-stage {
-  aspect-ratio: 700 / 486;
-}
-
-.figure-card[data-figure="the-loom"] .iso-stage {
-  aspect-ratio: 706 / 574;
-}
-
-.figure-card[data-figure="the-lighthouse"] .iso-stage {
-  aspect-ratio: 572 / 486;
-}
-
-.figure-card[data-figure="the-claw-machine"] .iso-stage {
-  aspect-ratio: 580 / 856;
 }
 
 .figure-card .iso-svg {
