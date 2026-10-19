@@ -780,6 +780,12 @@ export function stateText(at: number): string {
   return "running home";
 }
 
+/** what the corner readout says: the movement the claw is making, and how far
+    round the run it is when it makes it */
+export function readoutText(at: number): string {
+  return `${stateText(at)} · ${Math.round(clamp01(at) * 100)}% of the cycle`;
+}
+
 /** the frame a reader who has asked for stillness is given: the claw just clear
     of the pile with the right capsule already in it — the whole figure in one
     pose */

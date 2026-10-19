@@ -38,6 +38,7 @@ import {
   pickOpacity,
   poseAt,
   prongPaths,
+  readoutText,
   stateText,
   stickShape,
   tourAt,
@@ -140,14 +141,14 @@ export function TheClawMachine({ theme = "dark", className, playing: controlled,
     }
     if (pick.current) pick.current.style.opacity = pickOpacity(s.at).toFixed(3);
 
-    const text = stateText(s.at);
+    const text = readoutText(s.at);
     if (readout.current && readout.current.textContent !== text) readout.current.textContent = text;
     const host = root.current;
     if (host) {
       // the value the reader set, and the movement the claw is making on its way
       // there: both change on their own, so both are written from the one string
       const now = String(Math.round(clamp01(s.want) * 100));
-      const said = `${text} — ${now} per cent through the cycle`;
+      const said = `${stateText(s.want)} — ${now} per cent through the cycle`;
       if (host.getAttribute("aria-valuetext") !== said) {
         host.setAttribute("aria-valuenow", now);
         host.setAttribute("aria-valuetext", said);
@@ -381,7 +382,7 @@ export function TheClawMachine({ theme = "dark", className, playing: controlled,
         </div>
 
         <span ref={readout} className="the-claw-machine-readout" data-readout="">
-          {stateText(STILL_AT)}
+          {readoutText(STILL_AT)}
         </span>
 
         <button
