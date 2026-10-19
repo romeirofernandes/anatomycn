@@ -15,6 +15,8 @@ export default function App() {
   const main = React.useRef<HTMLElement>(null);
   const port = React.useRef<HTMLDivElement>(null);
   const shown = React.useRef(path);
+  const was = React.useRef(path);
+  const seen = React.useRef(new Map<string, number>());
 
   /*
     Only the middle of the column scrolls, so a wheel anywhere else — over the
@@ -42,6 +44,27 @@ export default function App() {
   React.useEffect(() => {
     document.title = entry ? `${entry.name} · anatomycn` : "anatomycn";
   }, [entry]);
+
+  /*
+    The middle of the column carries its own scroll, so a route change used to
+    leave the reader wherever the last page had been: a figure's page opened
+    already scrolled down, and coming back to the sheet landed at the top. The
+    port remembers where each route was left and the swap puts it back; a route
+    nobody has been to starts at its own top.
+  */
+  React.useEffect(() => {
+    const el = port.current;
+    if (!el) return;
+    const remember = () => seen.current.set(path, el.scrollTop);
+    el.addEventListener("scroll", remember, { passive: true });
+    return () => el.removeEventListener("scroll", remember);
+  }, [path]);
+
+  React.useLayoutEffect(() => {
+    if (was.current === path) return;
+    was.current = path;
+    if (port.current) port.current.scrollTop = seen.current.get(path) ?? 0;
+  }, [path]);
 
   /*
     A route change swaps the page under the reader: the link they activated is
