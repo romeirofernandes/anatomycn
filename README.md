@@ -41,11 +41,16 @@ all of this is what came out of that run, so the look of it belongs to
 
 ## the idea
 
-every figure runs off one number between 0 and 1. point that number at something
-in your app and the drawing follows it. the zip opens while the settings panel
-opens. the escalator climbs while a build runs. the lighthouse keeps beaming
-while your status page stays green. the geometry is already written, so you
-rarely have to touch it.
+every figure is one drawing running off a single number between 0 and 1, looping
+on it. that's why it moves like the object moves instead of like a css
+transition - the whole loop is written. drop one in and it plays itself; `playing`
+starts and stops it, `theme` picks the plate, and there is no number of yours to
+feed it.
+
+so the zip opens while the settings panel opens, the escalator climbs while a
+build runs, the lighthouse keeps beaming while your status page stays green. you
+wire that up from your side - one flag can drive as many figures as you like - and
+the geometry is already written, so you rarely have to touch it.
 
 none of them are cutaway diagrams either. it's the outside of a real object,
 doing the thing you built it for, and nothing is drawn opened up to explain how
