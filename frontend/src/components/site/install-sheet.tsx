@@ -223,11 +223,6 @@ export function InstallSheet({ entry }: { entry: FigureEntry }) {
       <h2 className="font-pixel pixel-square m-0 text-xl leading-tight text-balance text-foreground">
         Install
       </h2>
-      <p className="mt-3 text-base leading-relaxed text-body text-justify hyphens-auto">
-        {entry.name} is one shadcn item: the component, the kit it draws with and
-        its stylesheet, written into your project ready to edit. Nothing is
-        fetched at runtime.
-      </p>
 
       <div className="install mt-7">
         <Tabs value={mode} onValueChange={(next) => setMode(next as Mode)} variant="segment">
