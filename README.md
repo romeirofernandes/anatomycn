@@ -1,4 +1,4 @@
-[![anatomycn](docs/the-film.jpg)](frontend/public/anatomycn-demo.mp4)
+![anatomycn](docs/the-film.jpg)
 
 isometric svg components that actually move. every figure is a hand-built drawing
 animated off a single number, and it drops into any react project with the shadcn
@@ -6,7 +6,7 @@ cli.
 
 live at [anatomycn.vercel.app](https://anatomycn.vercel.app).
 
-![The Loom, drawn isometrically](docs/the-loom.svg)
+![the film](docs/the-film.gif)
 
 tldr; ten figures - a zip, a turntable, a padlock, a safe, an escalator, a
 scanner, a combination dial, a loom, a lighthouse and a claw machine. no svg
@@ -47,8 +47,6 @@ it works. that was the one rule i didn't break.
 each figure also has its own page - what it's for, and a few places it earns its
 keep.
 
-![The Turntable's page](docs/figure-page.jpg)
-
 ## the figures
 
 | figure | it's for |
@@ -63,8 +61,6 @@ keep.
 | `the-loom` | an integrations or data pipeline section, many sources into one fabric |
 | `the-lighthouse` | an uptime, status or monitoring page |
 | `the-claw-machine` | a search or discovery product, where the pick is the point |
-
-![The Claw Machine, drawn isometrically](docs/the-claw-machine.svg)
 
 ## install
 
