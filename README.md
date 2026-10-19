@@ -27,8 +27,9 @@ it works. that was the one rule i didn't break.
 
 ## the sheet
 
-the landing runs all ten at once, and each figure has its own page. here's the
-same dial in both themes.
+the landing runs all ten at once, and each figure has its own page. it's live at
+[anatomycn.vercel.app](https://anatomycn.vercel.app). here's the same dial in
+both themes.
 
 ![the safe dial in dark and light](docs/themes.jpg)
 
