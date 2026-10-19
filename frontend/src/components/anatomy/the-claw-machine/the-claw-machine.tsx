@@ -38,7 +38,6 @@ import {
   pickOpacity,
   poseAt,
   prongPaths,
-  readoutText,
   stateText,
   stickShape,
   tourAt,
@@ -93,7 +92,6 @@ export function TheClawMachine({ theme = "dark", className, playing: controlled,
 
   const root = React.useRef<HTMLDivElement | null>(null);
   const inView = useInView(root);
-  const readout = React.useRef<HTMLSpanElement | null>(null);
 
   /* the three things that ride a translation, and the four that are rewritten in
      place every frame. Everything else is settled at load. */
@@ -141,8 +139,6 @@ export function TheClawMachine({ theme = "dark", className, playing: controlled,
     }
     if (pick.current) pick.current.style.opacity = pickOpacity(s.at).toFixed(3);
 
-    const text = readoutText(s.at);
-    if (readout.current && readout.current.textContent !== text) readout.current.textContent = text;
     const host = root.current;
     if (host) {
       // the value the reader set, and the movement the claw is making on its way
@@ -380,10 +376,6 @@ export function TheClawMachine({ theme = "dark", className, playing: controlled,
             ))}
           </IsoFigure>
         </div>
-
-        <span ref={readout} className="the-claw-machine-readout" data-readout="">
-          {readoutText(STILL_AT)}
-        </span>
 
         <button
           type="button"

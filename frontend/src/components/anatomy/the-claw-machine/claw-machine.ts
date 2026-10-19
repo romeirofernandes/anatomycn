@@ -768,7 +768,7 @@ export function tourAt(clock: number): number {
 /** and where the tour stands when it is put down, so it can be picked back up */
 export const clockFor = (at: number) => clamp01(at) * CYCLE;
 
-/** the two words the corner readout can say */
+/** the two words the run can be in */
 export function stateText(at: number): string {
   const t = clamp01(at);
   if (t < LINE_UP) return "lining up";
@@ -778,12 +778,6 @@ export function stateText(at: number): string {
   if (t < CARRY) return "carrying";
   if (t < OPEN) return "releasing";
   return "running home";
-}
-
-/** what the corner readout says: the movement the claw is making, and how far
-    round the run it is when it makes it */
-export function readoutText(at: number): string {
-  return `${stateText(at)} · ${Math.round(clamp01(at) * 100)}% of the cycle`;
 }
 
 /** the frame a reader who has asked for stillness is given: the claw just clear

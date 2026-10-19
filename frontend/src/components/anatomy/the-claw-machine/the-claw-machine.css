@@ -1,5 +1,5 @@
-/* The Claw Machine — the framed plate the figure sits in, its readout, and the
-   play/pause control. The only chrome the figure needs; the drawing is styled by
+/* The Claw Machine — the framed plate the figure sits in and the play/pause
+   control. The only chrome the figure needs; the drawing is styled by
    iso.css. */
 
 .the-claw-machine {
@@ -27,20 +27,6 @@
 
 .the-claw-machine-stage[data-interactive]:active {
   cursor: grabbing;
-}
-
-/* the cycle reads in the corner the drawing leaves empty */
-.the-claw-machine-readout {
-  position: absolute;
-  top: calc(var(--the-claw-machine-pad) - 4px);
-  left: var(--the-claw-machine-pad);
-  max-width: 62%;
-  color: var(--anatomy-text);
-  font-size: 11px;
-  line-height: 1.35;
-  letter-spacing: 0.01em;
-  font-variant-numeric: tabular-nums;
-  pointer-events: none;
 }
 
 .the-claw-machine-control {
@@ -109,13 +95,6 @@
 .the-claw-machine :focus-visible {
   outline: 1px solid var(--anatomy-hi);
   outline-offset: 4px;
-}
-
-@media (max-width: 520px) {
-  .the-claw-machine-readout {
-    font-size: 10px;
-    max-width: 68%;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
