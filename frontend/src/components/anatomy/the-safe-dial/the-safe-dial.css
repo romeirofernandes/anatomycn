@@ -1,5 +1,5 @@
-/* The Safe Dial — the framed plate the figure sits in, its readout, and the
-   play/pause control. The only chrome the figure needs; the drawing itself is
+/* The Safe Dial — the framed plate the figure sits in and the play/pause
+   control. The only chrome the figure needs; the drawing itself is
    styled by iso.css. */
 
 .the-safe-dial {
@@ -28,54 +28,6 @@
 
 .the-safe-dial-stage[data-interactive]:active {
   cursor: grabbing;
-}
-
-/* the dial's own number, and the combination filling in beside it: it sits in
-   the plate's own corner, so it lands in the same place on the card and on the
-   figure's page */
-.the-safe-dial-readout {
-  position: absolute;
-  top: calc(var(--the-safe-dial-pad) - 2px);
-  left: var(--the-safe-dial-pad);
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-  font-family: var(--anatomy-mono);
-  font-variant-numeric: tabular-nums;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.the-safe-dial-number {
-  font-size: 19px;
-  line-height: 1;
-  letter-spacing: 0.02em;
-  color: var(--anatomy-hi);
-}
-
-.the-safe-dial-combo {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  font-size: 10px;
-  line-height: 1;
-  letter-spacing: 0.12em;
-}
-
-.the-safe-dial-label {
-  font-size: 9px;
-  line-height: 1;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--anatomy-lo);
-}
-
-.the-safe-dial-cell {
-  color: var(--anatomy-lo);
-}
-
-.the-safe-dial-cell[data-on] {
-  color: var(--anatomy-lit);
 }
 
 .the-safe-dial-control {

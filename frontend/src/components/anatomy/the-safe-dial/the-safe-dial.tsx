@@ -12,7 +12,6 @@ import {
   BASE_PARTS,
   BEZEL,
   COLLAR_PART,
-  COMBO,
   DIAL,
   DIAL_BODY,
   DIAL_FACE,
@@ -30,7 +29,6 @@ import {
   WIDTH,
   boltRingShape,
   boltShape,
-  dialNumber,
   enteredFor,
   graduationPaths,
   openFor,
@@ -92,9 +90,6 @@ export function TheSafeDial({
   const witness = React.useRef<SVGCircleElement | null>(null);
   const bolt = React.useRef<SolidHandle | null>(null);
   const boltRing = React.useRef<SolidHandle | null>(null);
-  const number = React.useRef<HTMLSpanElement | null>(null);
-  const cells = React.useRef<Array<HTMLSpanElement | null>>([]);
-
   const put = (node: SVGPathElement | null, d: string) => {
     if (node && node.getAttribute("d") !== d) node.setAttribute("d", d);
   };
@@ -117,19 +112,9 @@ export function TheSafeDial({
     bolt.current?.apply(boltShape(open));
     boltRing.current?.apply(boltRingShape(open));
 
-    const shown = String(dialNumber(spin)).padStart(2, "0");
-    if (number.current && number.current.textContent !== shown) number.current.textContent = shown;
-
-    const entered = enteredFor(spin);
-    for (let index = 0; index < cells.current.length; index++) {
-      const cell = cells.current[index];
-      if (!cell) continue;
-      if (index < entered) cell.setAttribute("data-on", "");
-      else cell.removeAttribute("data-on");
-    }
-
     const host = root.current;
     if (host) {
+      const entered = enteredFor(spin);
       if (host.getAttribute("aria-valuenow") !== String(entered)) host.setAttribute("aria-valuenow", String(entered));
       const text = stateText(spin);
       if (host.getAttribute("aria-valuetext") !== text) host.setAttribute("aria-valuetext", text);
@@ -198,26 +183,6 @@ export function TheSafeDial({
   return (
     <div className={className ? `iso the-safe-dial ${className}` : "iso the-safe-dial"} data-theme={theme}>
       <div className="the-safe-dial-plate">
-        <div className="the-safe-dial-readout" aria-hidden="true">
-          <span className="the-safe-dial-number" ref={number}>
-            00
-          </span>
-          <span className="the-safe-dial-combo">
-            <span className="the-safe-dial-label">combination</span>
-            {COMBO.map((value, index) => (
-              <span
-                key={value}
-                className="the-safe-dial-cell"
-                ref={(node) => {
-                  cells.current[index] = node;
-                }}
-              >
-                {String(value).padStart(2, "0")}
-              </span>
-            ))}
-          </span>
-        </div>
-
         <div
           ref={root}
           className="the-safe-dial-stage"

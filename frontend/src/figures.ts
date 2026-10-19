@@ -194,7 +194,7 @@ export const FIGURES: FigureEntry[] = [
     name: "The Safe Dial",
     tagline: "Spin the dial to the combination and the bolt lets go.",
     summary:
-      "A combination dial, the lock face of a vault, bolted to the bench. One number is the dial's angle: the graduations turn under a fixed index, the readout fills as the three numbers land in order, and the bolt throws back the moment the combination is right. Nothing is cut away — the plate is solid and the bolt is the only thing that moves through it. Pause it and the dial is yours to spin.",
+      "A combination dial, the lock face of a vault, bolted to the bench. One number is the dial's angle: the graduations turn under a fixed index, the three numbers land in order, and the bolt throws back the moment the combination is right. Nothing is cut away — the plate is solid and the bolt is the only thing that moves through it. Pause it and the dial is yours to spin.",
     uses: [
       "A sign-in, PIN or passkey section, where the code is the point",
       "A gated feature that unlocks only when the reader does the right thing",
