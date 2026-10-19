@@ -1,6 +1,5 @@
-/* The Loom — the framed plate the figure sits in, its readout, and the
-   play/pause control. The only chrome the figure needs; the drawing is styled
-   by iso.css. */
+/* The Loom — the framed plate the figure sits in and the play/pause control.
+   The only chrome the figure needs; the drawing is styled by iso.css. */
 
 .the-loom {
   --the-loom-pad: clamp(16px, 4.5vw, 34px);
@@ -45,20 +44,6 @@
 
 .the-loom-cloth > .iso-shade {
   fill: var(--anatomy-lit-shade);
-}
-
-/* the loom reads in the corner the drawing leaves empty */
-.the-loom-readout {
-  position: absolute;
-  top: calc(var(--the-loom-pad) - 4px);
-  left: var(--the-loom-pad);
-  max-width: 62%;
-  color: var(--anatomy-text);
-  font-size: 11px;
-  line-height: 1.35;
-  letter-spacing: 0.01em;
-  font-variant-numeric: tabular-nums;
-  pointer-events: none;
 }
 
 .the-loom-control {
@@ -127,13 +112,6 @@
 .the-loom :focus-visible {
   outline: 1px solid var(--anatomy-hi);
   outline-offset: 4px;
-}
-
-@media (max-width: 520px) {
-  .the-loom-readout {
-    font-size: 10px;
-    max-width: 68%;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

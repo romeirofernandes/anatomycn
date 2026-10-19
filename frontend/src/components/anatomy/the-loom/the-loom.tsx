@@ -113,7 +113,6 @@ export function TheLoom({ theme = "dark", className, playing: controlled, defaul
 
   const root = React.useRef<HTMLDivElement | null>(null);
   const inView = useInView(root);
-  const readout = React.useRef<HTMLSpanElement | null>(null);
 
   const heddle = React.useRef<SVGGElement | null>(null);
   const shuttle = React.useRef<SVGGElement | null>(null);
@@ -150,7 +149,6 @@ export function TheLoom({ theme = "dark", className, playing: controlled, defaul
       for (let index = 0; index < swung.length; index++) beater[index]?.current?.apply(swung[index]!);
 
       const text = stateText(pose);
-      if (readout.current && readout.current.textContent !== text) readout.current.textContent = text;
       const host = root.current;
       if (host) {
         const now = String(Math.round(clamp01(at) * 100));
@@ -366,10 +364,6 @@ export function TheLoom({ theme = "dark", className, playing: controlled, defaul
             </g>
           </IsoFigure>
         </div>
-
-        <span ref={readout} className="the-loom-readout" data-readout="">
-          {stateText(STILL)}
-        </span>
 
         <button
           type="button"
