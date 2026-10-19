@@ -12,6 +12,12 @@ live at [anatomycn.vercel.app](https://anatomycn.vercel.app).
 claw machine, then all ten of them in one grid, then the one command that
 installs the lot.
 
+[![The second film: the mark and the wordmark](docs/the-film-2.jpg)](https://anatomycn.vercel.app/anatomycn-demo-2.mp4)
+
+and a faster cut of the same idea - 27 seconds, one machine a shot, a new angle
+on every cut, a whip between them, then the ten in the grid and the one command
+again.
+
 ![The Loom, drawn isometrically](docs/the-loom.svg)
 
 tldr; ten figures - a zip, a turntable, a padlock, a safe, an escalator, a
